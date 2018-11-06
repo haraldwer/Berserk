@@ -11,20 +11,22 @@
 #include "Math.h"
 
 // Instances
+#include "Control.h"
 
 std::vector<InstanceBase*> Game::instanceList;
+sf::RenderWindow Game::window;
 
 Game::Game()
 {
-	InitRenderer(600, 200);
+	InitRenderer(400, 400);
 	SpriteLib::Init(); // SpriteLibrary
 	Time::Init(); // Delta timing
 	#pragma region Load Sprites
-	//SpriteLib::AddSprite(LoadSprite("path/name.png"), "spriteName");
+	SpriteLib::AddSprite(LoadSprite("Content/pipe.png"), "control");
 	#pragma endregion
 	DBOUT("Game Initialized");
 
-	//AddInstance(control, "", 10, 10);
+	AddInstance(control, "control", 10, 10);
 
 	// Main loop
 	while (Run());
@@ -33,8 +35,7 @@ Game::Game()
 #pragma region Misc
 void Game::InitRenderer(int h, int w)
 {
-	sf::RenderWindow wind(sf::VideoMode(w, h), "Berserk");
-	window = &wind;
+	window.create(sf::VideoMode(w, h), "Berserk");
 	height = h;
 	width = w;
 }
@@ -120,10 +121,10 @@ InstanceBase* Game::AddInstance(enum TYPE t, std::string spriteName, float xPos,
 	InstanceBase* newInstance;
 	switch (t)
 	{
-	/*case control:
+	case control:
 		newInstance = new Control(t, spriteName, xPos, yPos);
 		break;
-	case player:
+	/*case player:
 		newInstance = new Player(t, spriteName, xPos, yPos);
 		break;*/
 	default:
@@ -137,7 +138,7 @@ InstanceBase* Game::AddInstance(enum TYPE t, std::string spriteName, float xPos,
 
 bool Game::Run()
 {
-	if (!window->isOpen())
+	if (!window.isOpen())
 		return false;
 
 	// Main run event
@@ -157,12 +158,15 @@ bool Game::Run()
 		EndUpdate();
 
 		// Draw
-		window->clear();
+		window.clear();
 		BeginDraw();
 		Draw(); // Default
 		EndDraw();
 		DrawGUI();
-		window->display();
+
+		window.draw(SpriteLib::GetSprite("control"));
+
+		window.display();
 	}
 
 	return true;

@@ -141,8 +141,6 @@ bool Game::Run()
 		return false;
 
 	//heeeej harald jag är i game
-	// Nämen hallå där marquis vad trevligt
-	//tycker du om gyros rullar
 
 	// Main run event
 	Time::NewFrame(); // Calculate delta

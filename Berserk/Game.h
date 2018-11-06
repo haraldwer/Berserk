@@ -32,7 +32,7 @@ private:
 	void EndDraw();
 	void DrawGUI();
 
-	void LoadSprite(const char* INPUT_FILENAME);
+	sf::Sprite LoadSprite(const char* INPUT_FILENAME);
 	void InitRenderer(int h, int w);
 	sf::RenderWindow* window;
 };

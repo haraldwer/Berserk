@@ -23,34 +23,10 @@ Game::Game()
 	//SpriteLib::AddSprite(LoadSprite("path/name.png"), "spriteName");
 	#pragma endregion
 	DBOUT("Game Initialized");
-	std::cout << "Game Initialized";
 
-	AddInstance(control, "", 10, 10);
+	//AddInstance(control, "", 10, 10);
 
 	// Main loop
-
-
-
-	/*sf::RenderWindow window(sf::VideoMode(500, 300), "Yay");
-	sf::CircleShape shape(100.f);
-	shape.setFillColor(sf::Color::Green);
-
-	while (window.isOpen())
-	{
-		sf::Event event;
-		while (window.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-				window.close();
-		}
-
-		window.clear();
-		window.draw(shape);
-		window.display();
-	}*/
-
-
-
 	while (Run());
 }
 
@@ -64,21 +40,21 @@ void Game::InitRenderer(int h, int w)
 }
 
 //Load PNG file from disk to memory first, then decode to raw pixels in memory.
-void Game::LoadSprite(const char* INPUT_FILENAME)
+sf::Sprite Game::LoadSprite(const char* INPUT_FILENAME)
 {
 	// DEPRICATED
 
-	//std::vector<unsigned char> image; //the raw pixels
-	//unsigned int width, height;
+	sf::Texture texture;
+	if (!texture.loadFromFile(INPUT_FILENAME))
+	{
+		// error...
+	}
+	texture.setSmooth(true);
 
-	////decode
-	//unsigned int error = lodepng::decode(image, width, height, INPUT_FILENAME);
+	sf::Sprite sprite;
+	sprite.setTexture(texture);
 
-	////if there's an error, display it
-	//if (error) std::cout << "decoder error " << error << ": " << lodepng_error_text(error) << std::endl;
-
-	////the pixels are now in the vector "image", 4 bytes per pixel, ordered RGBARGBA..., use it as texture, draw it, ...
-	//return Sprite(image, height, width);
+	return sprite;
 }
 
 InstanceBase* Game::FindInstance(enum TYPE t)
@@ -184,19 +160,21 @@ bool Game::Run()
 		return false;
 	}
 
-	// Update
-	BeginUpdate();
-	Update(); // Default
-	EndUpdate();
+	if (instanceList.size() > 0)
+	{
+		// Update
+		BeginUpdate();
+		Update(); // Default
+		EndUpdate();
 
-	// Draw
-	window->clear();
-	BeginDraw();
-	Draw(); // Default
-	EndDraw();
-	DrawGUI();
-	window->display();
-
+		// Draw
+		window->clear();
+		BeginDraw();
+		Draw(); // Default
+		EndDraw();
+		DrawGUI();
+		window->display();
+	}
 
 	return true;
 }

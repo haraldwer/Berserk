@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "SpriteLib.h"
 
-std::map<std::string, Sprite> SpriteLib::spriteDict;
+std::map<std::string, sf::Sprite> SpriteLib::spriteDict;
 
 SpriteLib::SpriteLib()
 {
@@ -14,10 +14,10 @@ SpriteLib::~SpriteLib()
 	spriteDict.clear();
 }
 
-Sprite SpriteLib::GetSprite(std::string spriteName)
+sf::Sprite SpriteLib::GetSprite(std::string spriteName)
 {
 	// Iterate through all elements in std::map and search for the passed element
-	std::map<std::string, Sprite>::iterator it = spriteDict.begin();
+	std::map<std::string, sf::Sprite>::iterator it = spriteDict.begin();
 	while (it != spriteDict.end())
 	{
 		if (it->first == spriteName)
@@ -29,7 +29,7 @@ Sprite SpriteLib::GetSprite(std::string spriteName)
 	return spriteDict.begin()->second;
 }
 
-void SpriteLib::AddSprite(Sprite sprite, std::string spriteName)
+void SpriteLib::AddSprite(sf::Sprite sprite, std::string spriteName)
 {
 	spriteDict[spriteName] = sprite;
 }

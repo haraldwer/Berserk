@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "InstanceBase.h"
+#include <SFML\Graphics.hpp>
 
 InstanceBase::InstanceBase()
 {
@@ -21,9 +22,7 @@ InstanceBase::InstanceBase(int aType, const std::string &aSpriteName, const floa
 	myType(aType),
 	myHP(0)
 {
-	Sprite tempSprite = SpriteLib::GetSprite(mySpriteName);
-	myWCentering = tempSprite.width / 2;
-	myHCentering = tempSprite.height / 2;
+	sf::Sprite tempSprite = SpriteLib::GetSprite(mySpriteName);
 }
 
 void InstanceBase::Init()
@@ -51,6 +50,7 @@ void InstanceBase::BeginDraw()
 void InstanceBase::Draw()
 {
 	// Draw sprite
+	sf::Sprite sprite = SpriteLib::GetSprite(mySpriteName);
 }
 
 void InstanceBase::EndDraw()

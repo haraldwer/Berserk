@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "InstanceBase.h"
-#include <SFML\Graphics.hpp>
 
 InstanceBase::InstanceBase()
 {
@@ -43,17 +42,19 @@ void InstanceBase::EndUpdate()
 	myY += myVSpd * Time::DeltaTime(); // Delta
 }
 
-void InstanceBase::BeginDraw()
+void InstanceBase::BeginDraw(sf::RenderWindow* window)
 {
 }
 
-void InstanceBase::Draw()
+void InstanceBase::Draw(sf::RenderWindow* window)
 {
 	// Draw sprite
 	sf::Sprite sprite = SpriteLib::GetSprite(mySpriteName);
+	sprite.setPosition(myX, myY);
+	window->draw(sprite);
 }
 
-void InstanceBase::EndDraw()
+void InstanceBase::EndDraw(sf::RenderWindow* window)
 {
 }
 

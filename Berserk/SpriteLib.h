@@ -13,7 +13,7 @@ private:
 
 public:
 	static void Init();
-	static sf::Sprite GetSprite(std::string spriteName);
+	static sf::Sprite& GetSprite(std::string spriteName);
 	static void AddSprite(sf::Sprite sprite, std::string spriteName);
 };
 #endif

@@ -19,7 +19,7 @@ public:
 	unsigned width;
 	static void ClearInstanceList(enum TYPE ignore[]);
 	static void ClearInstanceList();
-	static sf::RenderWindow window;
+	static sf::RenderWindow* window;
 
 private:
 	bool Run();
@@ -35,6 +35,9 @@ private:
 
 	sf::Sprite LoadSprite(const char* INPUT_FILENAME);
 	void InitRenderer(int h, int w);
+	std::vector<sf::Texture*> textureContainer;
+	void UnloadTextures();
+	void LoadSprites();
 	
 };
 #endif

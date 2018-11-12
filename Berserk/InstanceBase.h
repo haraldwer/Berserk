@@ -4,6 +4,7 @@
 #include "SpriteLib.h"
 #include <Windows.h>
 #include "Time.h"
+#include <SFML\Graphics.hpp>
 
 class InstanceBase
 {
@@ -15,10 +16,9 @@ public:
 	virtual void Update();
 	virtual void EndUpdate();
 
-	virtual void BeginDraw();
-	virtual void Draw();
-	virtual void EndDraw();
-
+	virtual void BeginDraw(sf::RenderWindow* window);
+	virtual void Draw(sf::RenderWindow* window);
+	virtual void EndDraw(sf::RenderWindow* window);
 	virtual void DealDamage(int damage);
 	virtual void Die();
 

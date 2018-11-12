@@ -12,21 +12,20 @@
 
 // Instances
 #include "Control.h"
+#include "Player.h"
 
 std::vector<InstanceBase*> Game::instanceList;
-sf::RenderWindow Game::window;
+sf::RenderWindow* Game::window;
 
 Game::Game()
 {
 	InitRenderer(400, 400);
 	SpriteLib::Init(); // SpriteLibrary
 	Time::Init(); // Delta timing
-	#pragma region Load Sprites
-	SpriteLib::AddSprite(LoadSprite("Content/pipe.png"), "control");
-	#pragma endregion
+	LoadSprites();
 	DBOUT("Game Initialized");
 
-	AddInstance(control, "control", 10, 10);
+	AddInstance(control, "control", 0, 0);
 
 	// Main loop
 	while (Run());
@@ -35,26 +34,30 @@ Game::Game()
 #pragma region Misc
 void Game::InitRenderer(int h, int w)
 {
-	window.create(sf::VideoMode(w, h), "Berserk");
+	window->create(sf::VideoMode(w, h), "Berserk");
 	height = h;
 	width = w;
+}
+
+void Game::LoadSprites()
+{
+	// Load all sprites here!
+	SpriteLib::AddSprite(LoadSprite("Content/pipe.png"), "player");
 }
 
 //Load PNG file from disk to memory first, then decode to raw pixels in memory.
 sf::Sprite Game::LoadSprite(const char* INPUT_FILENAME)
 {
-	// DEPRICATED
-
-	sf::Texture texture;
-	if (!texture.loadFromFile(INPUT_FILENAME))
+	sf::Texture *texture = new sf::Texture();
+	if (!texture->loadFromFile(INPUT_FILENAME))
 	{
 		// error...
 	}
-	texture.setSmooth(true);
+	texture->setSmooth(true);
 
 	sf::Sprite sprite;
-	sprite.setTexture(texture);
-
+	sprite.setTexture(*texture);
+	textureContainer.push_back(texture);
 	return sprite;
 }
 
@@ -114,6 +117,16 @@ void Game::ClearInstanceList()
 		it->myDestroy = true;
 	}
 }
+
+void Game::UnloadTextures()
+{
+	for (auto it : textureContainer)
+	{
+		delete(it);
+		it = nullptr;
+	}
+	textureContainer.clear(); 
+}
 #pragma endregion
 
 InstanceBase* Game::AddInstance(enum TYPE t, std::string spriteName, float xPos, float yPos)
@@ -124,9 +137,9 @@ InstanceBase* Game::AddInstance(enum TYPE t, std::string spriteName, float xPos,
 	case control:
 		newInstance = new Control(t, spriteName, xPos, yPos);
 		break;
-	/*case player:
+	case player:
 		newInstance = new Player(t, spriteName, xPos, yPos);
-		break;*/
+		break;
 	default:
 		newInstance = new InstanceBase(0, "", 0, 0);
 		break;
@@ -138,8 +151,15 @@ InstanceBase* Game::AddInstance(enum TYPE t, std::string spriteName, float xPos,
 
 bool Game::Run()
 {
-	if (!window.isOpen())
+	if (!window->isOpen())
 		return false;
+
+	sf::Event event;
+	while (window->pollEvent(event))
+	{
+		if (event.type == sf::Event::Closed)
+			window->close();
+	}
 
 	// Main run event
 	Time::NewFrame(); // Calculate delta
@@ -158,15 +178,13 @@ bool Game::Run()
 		EndUpdate();
 
 		// Draw
-		window.clear();
+		window->clear();
 		BeginDraw();
 		Draw(); // Default
 		EndDraw();
 		DrawGUI();
-
-		window.draw(SpriteLib::GetSprite("control"));
-
-		window.display();
+		//window->draw(SpriteLib::GetSprite("control"));
+		window->display();
 	}
 
 	return true;
@@ -214,17 +232,17 @@ void Game::EndUpdate()
 #pragma region Handle draw
 void Game::BeginDraw()
 {
-	for (auto it : instanceList) { it->BeginDraw(); }
+	for (auto it : instanceList) { it->BeginDraw(window); }
 }
 
 void Game::Draw()
 {
-	for (auto it : instanceList) { it->Draw(); }
+	for (auto it : instanceList) { it->Draw(window); }
 }
 
 void Game::EndDraw()
 {
-	for (auto it : instanceList) { it->EndDraw(); }
+	for (auto it : instanceList) { it->EndDraw(window); }
 }
 
 void Game::DrawGUI()

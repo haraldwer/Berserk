@@ -34,6 +34,7 @@ Game::Game()
 #pragma region Misc
 void Game::InitRenderer(int h, int w)
 {
+	window = new sf::RenderWindow();
 	window->create(sf::VideoMode(w, h), "Berserk");
 	height = h;
 	width = w;

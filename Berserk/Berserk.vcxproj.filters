@@ -39,7 +39,7 @@
     <ClInclude Include="Control.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
+    <ClInclude Include="crate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -72,6 +72,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="crate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

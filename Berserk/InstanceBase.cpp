@@ -21,7 +21,7 @@ InstanceBase::InstanceBase(int aType, const std::string &aSpriteName, const floa
 	myType(aType),
 	myHP(0)
 {
-	sf::Sprite tempSprite = SpriteLib::GetSprite(mySpriteName);
+	//sf::Sprite tempSprite = SpriteLib::GetSprite(mySpriteName);
 }
 
 void InstanceBase::Init()
@@ -48,10 +48,13 @@ void InstanceBase::BeginDraw(sf::RenderWindow* window)
 
 void InstanceBase::Draw(sf::RenderWindow* window)
 {
-	// Draw sprite
-	sf::Sprite sprite = SpriteLib::GetSprite(mySpriteName);
-	sprite.setPosition(myX, myY);
-	window->draw(sprite);
+	if (mySpriteName != "")
+	{
+		// Draw sprite
+		sf::Sprite sprite = SpriteLib::GetSprite(mySpriteName);
+		sprite.setPosition(myX, myY);
+		window->draw(sprite);		 
+	}
 }
 
 void InstanceBase::EndDraw(sf::RenderWindow* window)

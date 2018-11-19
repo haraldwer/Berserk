@@ -126,6 +126,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="crate.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="InstanceBase.h" />
@@ -133,8 +134,9 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="SpriteLib.h" />
     <ClInclude Include="Time.h" />
-	<ClInclude Include="Control.h" />
-	<ClCompile Include="Player.h" />
+    <ClInclude Include="Control.h" />
+    <ClCompile Include="crate.cpp" />
+    <ClCompile Include="Player.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Berserk.cpp" />
@@ -145,8 +147,8 @@
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="SpriteLib.cpp" />
     <ClCompile Include="Time.cpp" />
-	<ClCompile Include="Control.cpp" />
-	<ClCompile Include="Player.cpp" />
+    <ClCompile Include="Control.cpp" />
+    <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

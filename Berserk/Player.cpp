@@ -1,11 +1,12 @@
+#include "pch.h"
 #include "Player.h"
 #include "Time.h"
 #include "Input.h"
 #include "Math.h"
+#include <cmath>
+#include"Game.h"
 
-Player::Player()
-{
-}
+
 
 Player::~Player()
 {
@@ -15,8 +16,8 @@ void Player::Init()
 {
 	myAttackTimer = 0;
 	myAttackCD = 0;
-	myMoveAcc = 0.1;
-	myMoveFric = 0.965;
+	myMoveAcc = 0.075;
+	myMoveFric = 0.904; 
 
 	baseSprite = mySpriteName;
 	currentAnim = idle;
@@ -46,9 +47,15 @@ void Player::BeginUpdate()
 	{
 		currentAnim = idle;
 	}
-	myVSpd *= myMoveFric;
-	myHSpd *= myMoveFric;
+	
+	myVSpd *= pow(myMoveFric, Time::DeltaTime());//myMoveFric*Time::DeltaTime();
+	myHSpd *= pow(myMoveFric, Time::DeltaTime());//myMoveFric*Time::DeltaTime();
 
+	if (Game::Collide(*this,Game::TYPE::crate)) //
+	{
+		DealDamage(1);
+		
+	}
 	// Animations
 	/*
 	subImg += Time::DeltaTime() / 4;

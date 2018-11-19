@@ -1,12 +1,13 @@
-#ifndef PLAYER_HEADER
-#define PLAYER_HEADER
+#ifndef CRATE_HEADER
+#define CRATE_HEADER
 #include "InstanceBase.h"
-class Player : public InstanceBase
+class Crate : public InstanceBase
 {
 	using InstanceBase::InstanceBase;
 
 public:
-	~Player();
+	Crate();
+	~Crate();
 	virtual void Init() override;
 	virtual void BeginUpdate() override;
 	virtual void Die() override;
@@ -24,5 +25,7 @@ private:
 	int currentAnim;
 	float subImg;
 	enum AnimStates { idle, running, attacking };
+
 };
-#endif
+
+#endif // !CRATE_HEADER

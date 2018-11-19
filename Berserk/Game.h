@@ -10,7 +10,7 @@ class Game
 public:
 	Game();
 	~Game();
-	enum TYPE { control, player };
+	enum TYPE { control, player, crate };
 	static InstanceBase* AddInstance(enum TYPE t, std::string spriteName, float xPos, float yPos);
 	static std::vector<InstanceBase*> instanceList;
 	static InstanceBase* FindInstance(enum TYPE t);
@@ -20,6 +20,8 @@ public:
 	static void ClearInstanceList(enum TYPE ignore[]);
 	static void ClearInstanceList();
 	static sf::RenderWindow* window;
+
+	bool Collide(InstanceBase* aCollider, enum TYPE aTypeToCheckAgainst);
 
 private:
 	bool Run();

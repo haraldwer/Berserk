@@ -13,19 +13,20 @@
 // Instances
 #include "Control.h"
 #include "Player.h"
+#include "Crate.h"
 
 std::vector<InstanceBase*> Game::instanceList;
 sf::RenderWindow* Game::window;
 
 Game::Game()
 {
-	InitRenderer(400, 400);
+	InitRenderer(800, 800);
 	SpriteLib::Init(); // SpriteLibrary
 	Time::Init(); // Delta timing
 	LoadSprites();
 	DBOUT("Game Initialized");
 
-	AddInstance(control, "control", 0, 0);
+	AddInstance(control, "", 0, 0);
 
 	// Main loop
 	while (Run());
@@ -43,7 +44,8 @@ void Game::InitRenderer(int h, int w)
 void Game::LoadSprites()
 {
 	// Load all sprites here!
-	SpriteLib::AddSprite(LoadSprite("Content/pipe.png"), "player");
+	SpriteLib::AddSprite(LoadSprite("Content/dagger.png"), "player");
+	SpriteLib::AddSprite(LoadSprite("content/crate.png"), "crate");
 }
 
 //Load PNG file from disk to memory first, then decode to raw pixels in memory.
@@ -132,6 +134,7 @@ void Game::UnloadTextures()
 
 InstanceBase* Game::AddInstance(enum TYPE t, std::string spriteName, float xPos, float yPos)
 {
+	
 	InstanceBase* newInstance;
 	switch (t)
 	{
@@ -141,6 +144,10 @@ InstanceBase* Game::AddInstance(enum TYPE t, std::string spriteName, float xPos,
 	case player:
 		newInstance = new Player(t, spriteName, xPos, yPos);
 		break;
+	case crate:
+		newInstance = new Crate(t, spriteName, xPos, yPos);
+		break;
+
 	default:
 		newInstance = new InstanceBase(0, "", 0, 0);
 		break;
@@ -184,7 +191,6 @@ bool Game::Run()
 		Draw(); // Default
 		EndDraw();
 		DrawGUI();
-		//window->draw(SpriteLib::GetSprite("control"));
 		window->display();
 	}
 
@@ -261,4 +267,25 @@ Game::~Game()
 		delete(instanceList.at(i));
 		instanceList.erase(instanceList.begin() + i);
 	}
+}
+
+bool Game::Collide(InstanceBase* aCollider , enum TYPE aTypeToCheckAgainst)
+{
+	
+	for (int i = instanceList.capacity()-1; i < 0; i--)
+	{
+		if (instanceList[i]->myType == aTypeToCheckAgainst)
+		{
+			sf::Sprite sprite = SpriteLib::GetSprite(aCollider->mySpriteName);
+			sf::Sprite sprite2 = SpriteLib::GetSprite(instanceList[i]->mySpriteName);
+
+			if (sprite.getGlobalBounds().intersects(sprite2.getGlobalBounds()))
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
+
 }

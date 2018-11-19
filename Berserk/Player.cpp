@@ -6,7 +6,9 @@
 #include <cmath>
 #include"Game.h"
 
-
+Player::Player()
+{
+}
 
 Player::~Player()
 {
@@ -24,6 +26,11 @@ void Player::Init()
 	subImg = 0;
 
 	myHP = 3; // Temp variables
+
+	// Creating and storing collider so that we dont need to recreate each frame
+	sf::Sprite tempSprite = SpriteLib::GetSprite(mySpriteName);
+	myCollider.setPosition(tempSprite.getPosition());
+	myCollider.setSize(sf::Vector2f(tempSprite.getTextureRect().width, tempSprite.getTextureRect().height));
 }
 
 void Player::BeginUpdate()

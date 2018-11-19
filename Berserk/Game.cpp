@@ -44,6 +44,7 @@ void Game::InitRenderer(int h, int w)
 void Game::LoadSprites()
 {
 	// Load all sprites here!
+	SpriteLib::AddSprite(LoadSprite("Content/player.png"), "player");
 	SpriteLib::AddSprite(LoadSprite("Content/dagger.png"), "player");
 	SpriteLib::AddSprite(LoadSprite("content/crate.png"), "crate");
 }

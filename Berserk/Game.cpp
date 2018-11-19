@@ -25,7 +25,7 @@ Game::Game()
 	LoadSprites();
 	DBOUT("Game Initialized");
 
-	AddInstance(control, "control", 0, 0);
+	AddInstance(control, "", 0, 0);
 
 	// Main loop
 	while (Run());
@@ -43,7 +43,7 @@ void Game::InitRenderer(int h, int w)
 void Game::LoadSprites()
 {
 	// Load all sprites here!
-	SpriteLib::AddSprite(LoadSprite("Content/pipe.png"), "player");
+	SpriteLib::AddSprite(LoadSprite("Content/player.png"), "player");
 }
 
 //Load PNG file from disk to memory first, then decode to raw pixels in memory.

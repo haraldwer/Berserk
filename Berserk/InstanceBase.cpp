@@ -21,7 +21,6 @@ InstanceBase::InstanceBase(int aType, const std::string &aSpriteName, const floa
 	myType(aType),
 	myHP(0)
 {
-	sf::Sprite tempSprite = SpriteLib::GetSprite(mySpriteName);
 }
 
 void InstanceBase::Init()

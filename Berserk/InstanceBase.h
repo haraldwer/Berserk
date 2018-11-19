@@ -45,7 +45,8 @@ public:
 		myRoom,
 		myType,
 		myHP;
-
+	
+	sf::RectangleShape myCollider;
 	std::string mySpriteName;
 };
 

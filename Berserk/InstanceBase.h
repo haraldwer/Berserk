@@ -22,8 +22,6 @@ public:
 	virtual void DealDamage(int damage);
 	virtual void Die();
 	
-
-
 	InstanceBase();
 	explicit InstanceBase(int aType, const std::string &aSpriteName, const float &anX, const float &aY);
 	virtual ~InstanceBase();

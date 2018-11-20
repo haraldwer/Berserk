@@ -47,6 +47,7 @@ void Game::LoadSprites()
 	// Load all sprites here!
 	SpriteLib::AddSprite(LoadSprite("Content/player.png"), "player");
 	SpriteLib::AddSprite(LoadSprite("content/crate.png"), "crate");
+	SpriteLib::AddSprite(LoadSprite("content/basicSword.png"), "basicSword");
 }
 
 //Load PNG file from disk to memory first, then decode to raw pixels in memory.
@@ -225,6 +226,7 @@ bool Game::Run()
 
 	// Main run event
 	Time::NewFrame(); // Calculate delta
+	Input::UpdateInput(window);
 
 	// Force quit
 	if (Input::KeyDown(VK_ESCAPE))

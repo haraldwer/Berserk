@@ -12,7 +12,6 @@ class Player : public InstanceBase
 		virtual void Update() override;
 		virtual void Die() override;
 		virtual void DealDamage(int damage) override;
-		//Player();
 
 	private:
 		// General stuff

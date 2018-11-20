@@ -56,7 +56,7 @@ void InstanceBase::Draw(sf::RenderWindow* window)
 		// Draw sprite
 		sf::Sprite sprite = SpriteLib::GetSprite(mySpriteName);
 		sprite.setPosition(myX, myY);
-		window->draw(myCollider); 
+		sprite.setRotation(myDir);
 		window->draw(sprite);
 	}
 }

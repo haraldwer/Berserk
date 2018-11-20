@@ -132,6 +132,7 @@
     <ClInclude Include="InstanceBase.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="PlayerSword.h" />
     <ClInclude Include="SpriteLib.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="Control.h" />
@@ -145,6 +146,7 @@
     <ClCompile Include="InstanceBase.cpp" />
     <ClCompile Include="Math.cpp" />
     <ClCompile Include="pch.cpp" />
+    <ClCompile Include="PlayerSword.cpp" />
     <ClCompile Include="SpriteLib.cpp" />
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="Control.cpp" />

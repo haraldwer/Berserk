@@ -107,7 +107,7 @@ void Player::Update()
 	}
 
 	mySword->myX = myX;
-	mySword->myY = myY;
+	mySword->myY = myY - 50;
 
 	// Animations
 	/*

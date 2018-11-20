@@ -1,5 +1,12 @@
+#include "pch.h"
 #include "PlayerSword.h"
 #include "Game.h"
+#include "Math.h"
+#include "Input.h"
+
+PlayerSword::PlayerSword()
+{
+}
 
 PlayerSword::~PlayerSword()
 {
@@ -7,6 +14,7 @@ PlayerSword::~PlayerSword()
 
 void PlayerSword::Init()
 {
+	// Comment and stuff
 }
 
 void PlayerSword::Update()
@@ -16,4 +24,6 @@ void PlayerSword::Update()
 	{
 		it->DealDamage(1);
 	}
+	
+	myDir = Math::PointDirection(0, 0, Input::GetMouseX(), Input::GetMouseY());
 }

@@ -2,6 +2,8 @@
 #include "Math.h"
 #include <cmath>
 
+float Math::pi = 3.14159265359f;
+
 Math::Math()
 {
 }
@@ -17,5 +19,5 @@ float Math::PointDistance(float x1, float y1, float x2, float y2)
 
 float Math::PointDirection(float x1, float y1, float x2, float y2)
 {
-	return atan2(y2 - y1, x2 - x1);
+	return atan2(y2 - y1, x2 - x1)* 180 / pi;
 }

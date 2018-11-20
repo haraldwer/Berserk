@@ -16,12 +16,14 @@ InstanceBase::InstanceBase(int aType, const std::string &aSpriteName, const floa
 	myAlpha(1),
 	myDir(0),
 	myDestroy(false),
+	myIsSolid(false),
 	myHScale(1),
 	myVScale(1),
 	myType(aType),
 	myHP(0)
 {
 	//sf::Sprite tempSprite = SpriteLib::GetSprite(mySpriteName);
+	myCollider.setSize(sf::Vector2f(0, 0));
 }
 
 void InstanceBase::Init()
@@ -30,6 +32,7 @@ void InstanceBase::Init()
 
 void InstanceBase::BeginUpdate()
 {
+	myCollider.setPosition(myX, myY);
 }
 
 void InstanceBase::Update()
@@ -53,7 +56,8 @@ void InstanceBase::Draw(sf::RenderWindow* window)
 		// Draw sprite
 		sf::Sprite sprite = SpriteLib::GetSprite(mySpriteName);
 		sprite.setPosition(myX, myY);
-		window->draw(sprite);		 
+		window->draw(myCollider); 
+		window->draw(sprite);
 	}
 }
 

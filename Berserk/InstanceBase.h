@@ -37,7 +37,8 @@ public:
 		myDir;
 
 	bool
-		myDestroy;
+		myDestroy,
+		myIsSolid;
 
 	int
 		myWCentering,

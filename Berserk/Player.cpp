@@ -4,7 +4,7 @@
 #include "Input.h"
 #include "Math.h"
 #include <cmath>
-#include"Game.h"
+#include "Game.h"
 
 Player::Player()
 {
@@ -18,8 +18,8 @@ void Player::Init()
 {
 	myAttackTimer = 0;
 	myAttackCD = 0;
-	myMoveAcc = 0.075;
-	myMoveFric = 0.904; 
+	myMoveAcc = 0.05f;
+	myMoveFric = 0.85f; 
 
 	baseSprite = mySpriteName;
 	currentAnim = idle;
@@ -29,11 +29,13 @@ void Player::Init()
 
 	// Creating and storing collider so that we dont need to recreate each frame
 	sf::Sprite tempSprite = SpriteLib::GetSprite(mySpriteName);
-	myCollider.setPosition(tempSprite.getPosition());
+	myCollider.setPosition(myX, myY);
 	myCollider.setSize(sf::Vector2f(tempSprite.getTextureRect().width, tempSprite.getTextureRect().height));
+
+	mySword = Game::AddInstance(Game::playerSword, "basicSword", myX, myY);
 }
 
-void Player::BeginUpdate()
+void Player::Update()
 {
 	// Movement
 	float tempH = ((int)Input::KeyDown('D') - (int)Input::KeyDown('A'))*myMoveAcc;
@@ -54,15 +56,59 @@ void Player::BeginUpdate()
 	{
 		currentAnim = idle;
 	}
-	
 	myVSpd *= pow(myMoveFric, Time::DeltaTime());//myMoveFric*Time::DeltaTime();
 	myHSpd *= pow(myMoveFric, Time::DeltaTime());//myMoveFric*Time::DeltaTime();
 
-	if (Game::Collide(*this,Game::TYPE::crate)) //
+	
+
+	// Collisions
+	// Horizontal
+	myCollider.setPosition(myX + myHSpd, myY);
+	InstanceBase* it = Game::InstanceCollision(dynamic_cast<InstanceBase*>(this), Game::crate);
+	if (it != nullptr)
 	{
-		DealDamage(1);
-		
+		int sign = 1;
+		if (!signbit(myHSpd))
+		{
+			sign = -1;
+		}
+		while (myHSpd*-sign > 0 && it != nullptr)
+		{
+			myHSpd += sign;
+			myCollider.setPosition(myX + myHSpd, myY);
+			it = Game::InstanceCollision(dynamic_cast<InstanceBase*>(this), Game::crate);
+		}
 	}
+
+	// Vertical
+	myCollider.setPosition(myX, myY + myVSpd);
+	it = Game::InstanceCollision(dynamic_cast<InstanceBase*>(this), Game::crate);
+	if (it != nullptr)
+	{
+		int sign = 1;
+		if (!signbit(myVSpd))
+		{
+			sign = -1;
+		}
+		while (myVSpd*-sign > 0 && it != nullptr)
+		{
+			myVSpd += sign;
+			myCollider.setPosition(myX, myY + myVSpd);
+			it = Game::InstanceCollision(dynamic_cast<InstanceBase*>(this), Game::crate);
+		}
+	}
+
+	// Multiple direction check
+	myCollider.setPosition(myX + myHSpd, myY + myVSpd);
+	it = Game::InstanceCollision(dynamic_cast<InstanceBase*>(this), Game::crate);
+	if (it != nullptr)
+	{
+		myHSpd = 0;
+	}
+
+	mySword->myX = myX;
+	mySword->myY = myY;
+
 	// Animations
 	/*
 	subImg += Time::DeltaTime() / 4;

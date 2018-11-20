@@ -14,6 +14,7 @@
 #include "Control.h"
 #include "Player.h"
 #include "Crate.h"
+#include "PlayerSword.h"
 
 std::vector<InstanceBase*> Game::instanceList;
 sf::RenderWindow* Game::window;
@@ -45,7 +46,6 @@ void Game::LoadSprites()
 {
 	// Load all sprites here!
 	SpriteLib::AddSprite(LoadSprite("Content/player.png"), "player");
-	SpriteLib::AddSprite(LoadSprite("Content/dagger.png"), "player");
 	SpriteLib::AddSprite(LoadSprite("content/crate.png"), "crate");
 }
 
@@ -94,6 +94,53 @@ InstanceBase* Game::FindNearest(enum TYPE t, float x, float y)
 		}
 	}
 	return nearest;
+}
+
+InstanceBase* Game::InstanceCollision(InstanceBase* aCollider, enum TYPE aTypeToCheckAgainst)
+{
+	for (auto it : instanceList)
+	{
+		if (it->myType == aTypeToCheckAgainst)
+		{
+			if (aCollider->myCollider.getGlobalBounds().intersects(it->myCollider.getGlobalBounds()))
+			{
+				return it;
+			}
+		}
+	}
+	return nullptr;
+}
+
+std::vector<InstanceBase*> Game::InstanceCollisionList(InstanceBase* theObjectToCheck, enum TYPE aTypeToCheckAgainst)
+{
+	std::vector<InstanceBase*> returnList = std::vector<InstanceBase*>();
+	if (aTypeToCheckAgainst == Game::solids)
+	{
+		for (auto it : instanceList)
+		{
+			if (it->myIsSolid)
+			{
+				if (theObjectToCheck->myCollider.getGlobalBounds().intersects(it->myCollider.getGlobalBounds()))
+				{
+					returnList.push_back(it);
+				}
+			}
+		}
+	}
+	else
+	{
+		for (auto it : instanceList)
+		{
+			if (it->myType == aTypeToCheckAgainst)
+			{
+				if (theObjectToCheck->myCollider.getGlobalBounds().intersects(it->myCollider.getGlobalBounds()))
+				{
+					returnList.push_back(it);
+				}
+			}
+		}
+	}
+	return returnList;
 }
 
 void Game::ClearInstanceList(enum TYPE ignore[])
@@ -148,13 +195,19 @@ InstanceBase* Game::AddInstance(enum TYPE t, std::string spriteName, float xPos,
 	case crate:
 		newInstance = new Crate(t, spriteName, xPos, yPos);
 		break;
+	case playerSword:
+		newInstance = new PlayerSword(t, spriteName, xPos, yPos);
+		break;
 
 	default:
-		newInstance = new InstanceBase(0, "", 0, 0);
+		newInstance = nullptr;
 		break;
 	}
-	newInstance->Init();
-	instanceList.push_back(dynamic_cast<InstanceBase*>(newInstance));
+	if (newInstance != nullptr)
+	{
+		newInstance->Init();
+		instanceList.push_back(dynamic_cast<InstanceBase*>(newInstance));
+	}
 	return newInstance;
 }
 
@@ -268,25 +321,4 @@ Game::~Game()
 		delete(instanceList.at(i));
 		instanceList.erase(instanceList.begin() + i);
 	}
-}
-
-bool Game::Collide(InstanceBase* aCollider , enum TYPE aTypeToCheckAgainst)
-{
-	
-	for (int i = instanceList.capacity()-1; i < 0; i--)
-	{
-		if (instanceList[i]->myType == aTypeToCheckAgainst)
-		{
-			sf::Sprite sprite = SpriteLib::GetSprite(aCollider->mySpriteName);
-			sf::Sprite sprite2 = SpriteLib::GetSprite(instanceList[i]->mySpriteName);
-
-			if (sprite.getGlobalBounds().intersects(sprite2.getGlobalBounds()))
-			{
-				return true;
-			}
-		}
-	}
-
-	return false;
-
 }

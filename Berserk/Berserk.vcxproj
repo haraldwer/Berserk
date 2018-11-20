@@ -126,7 +126,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="crate.h" />
+    <ClInclude Include="Crate.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="InstanceBase.h" />
@@ -135,7 +135,7 @@
     <ClInclude Include="SpriteLib.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="Control.h" />
-    <ClCompile Include="crate.cpp" />
+    <ClCompile Include="Crate.cpp" />
     <ClCompile Include="Player.h" />
   </ItemGroup>
   <ItemGroup>

@@ -8,8 +8,7 @@ void Control::Init()
 {
 	// Init logic here
 	Game::AddInstance(Game::player, "player", 100, 100);
-	Game::AddInstance(Game::crate, "crate",250,154);
-
+	Game::AddInstance(Game::crate, "crate",300,300);
 }
 
 Control::Control()

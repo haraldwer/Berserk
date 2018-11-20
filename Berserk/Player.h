@@ -5,25 +5,27 @@ class Player : public InstanceBase
 {
 	using InstanceBase::InstanceBase;
 
+	public:
+		Player();
+		~Player();
+		virtual void Init() override;
+		virtual void Update() override;
+		virtual void Die() override;
+		virtual void DealDamage(int damage) override;
+		//Player();
+
 	private:
 		// General stuff
 		float myAttackTimer;
 		int myAttackCD;
 		float myMoveAcc;
 		float myMoveFric;
+		InstanceBase* mySword;
 
 		// Animation stuff
 		std::string baseSprite;
 		int currentAnim;
 		float subImg;
 		enum AnimStates { idle, running, attacking };
-
-	public:
-		virtual void Init() override;
-		virtual void BeginUpdate() override;
-		virtual void Die() override;
-		virtual void DealDamage(int damage) override;
-		//Player();
-		~Player();
 };
 #endif

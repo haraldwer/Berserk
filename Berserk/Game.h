@@ -10,7 +10,7 @@ class Game
 public:
 	Game();
 	~Game();
-	enum TYPE { control, player, crate };
+	enum TYPE { control, player, crate, playerSword, solids, baseEnemy };
 	static InstanceBase* AddInstance(enum TYPE t, std::string spriteName, float xPos, float yPos);
 	static std::vector<InstanceBase*> instanceList;
 	static InstanceBase* FindInstance(enum TYPE t);
@@ -21,7 +21,8 @@ public:
 	static void ClearInstanceList();
 	static sf::RenderWindow* window;
 
-	bool Collide(InstanceBase* aCollider, enum TYPE aTypeToCheckAgainst);
+	static InstanceBase* InstanceCollision(InstanceBase* aCollider, enum TYPE aTypeToCheckAgainst);
+	static std::vector<InstanceBase*> InstanceCollisionList(InstanceBase* theObjectToCheck, TYPE aTypeToCheckAgainst);
 
 private:
 	bool Run();

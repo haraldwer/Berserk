@@ -33,6 +33,22 @@ int Input::GetMouseY()
 	return mouseY;
 }
 
+bool Input::MouseDown(int aKey)
+{
+	switch (aKey)
+	{
+	case mbRight:
+		return sf::Mouse::Right;
+		break;
+	case mbLeft:
+		return sf::Mouse::Left;
+		break;
+	default:
+		return false;
+		break;
+	}
+}
+
 void Input::UpdateInput(sf::RenderWindow * window)
 {
 	mouseX = sf::Mouse::getPosition(*window).x;

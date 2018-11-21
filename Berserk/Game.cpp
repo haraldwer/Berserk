@@ -183,7 +183,6 @@ void Game::UnloadTextures()
 
 InstanceBase* Game::AddInstance(enum TYPE t, std::string spriteName, float xPos, float yPos)
 {
-	
 	InstanceBase* newInstance;
 	switch (t)
 	{
@@ -206,17 +205,22 @@ InstanceBase* Game::AddInstance(enum TYPE t, std::string spriteName, float xPos,
 	}
 	if (newInstance != nullptr)
 	{
+		newInstance->myID = newInstance;
 		newInstance->Init();
 		instanceList.push_back(dynamic_cast<InstanceBase*>(newInstance));
+		Game::DepthSort(newInstance, newInstance->myDepth);
 	}
 	return newInstance;
 }
 
 bool Game::Run()
 {
+	#pragma region CheckWindowStatus
+	// Window is no longer open
 	if (!window->isOpen())
 		return false;
-
+	
+	// Window is closing
 	sf::Event event;
 	while (window->pollEvent(event))
 	{
@@ -224,33 +228,34 @@ bool Game::Run()
 			window->close();
 	}
 
-	// Main run event
-	Time::NewFrame(); // Calculate delta
-	Input::UpdateInput(window);
-
-	// Force quit
+	// ESC Quit
 	if (Input::KeyDown(VK_ESCAPE))
 	{
 		return false;
 	}
+	#pragma endregion
+	
+	// Main run event
+	Time::NewFrame(); // Calculate delta
+	Input::UpdateInput(window); // Update mouse position relative to window
 
-	if (instanceList.size() > 0)
+	if (instanceList.size() > 0) // Stack overflow if empty
 	{
 		// Update
 		BeginUpdate();
-		Update(); // Default
+		Update(); // Default Update
 		EndUpdate();
 
 		// Draw
 		window->clear();
 		BeginDraw();
-		Draw(); // Default
+		Draw(); // Default Draw
 		EndDraw();
 		DrawGUI();
 		window->display();
 	}
 
-	return true;
+	return true; // If loop should continue
 }
 
 #pragma region Handle update
@@ -268,7 +273,6 @@ void Game::Update()
 	{
 		instanceList[i]->Update();
 	}
-	//for (auto it : instanceList) { }
 }
 
 void Game::EndUpdate()
@@ -293,19 +297,50 @@ void Game::EndUpdate()
 #pragma endregion
 
 #pragma region Handle draw
+void Game::DepthSort(InstanceBase* ptr, int newDepth)
+{
+	for (int i = 0; i < instanceList.size(); i++) 
+	{
+		if (instanceList[i] == ptr)
+		{
+			for (int i2 = 0; i2 < instanceList.size(); i2++)
+			{
+				if (ptr->myDepth < instanceList[i2]->myDepth)
+				{
+					instanceList.insert(instanceList.begin() + i2, ptr); // Place at new location
+					ptr->myDepth = newDepth;
+					if (i >= i2)
+					{
+						instanceList.erase(instanceList.begin() + i + 1); // Remove old
+					}
+					else
+					{
+						instanceList.erase(instanceList.begin() + i); // Remove old
+					}
+					return;
+				}
+			}
+			instanceList.push_back(ptr); // Place at new location
+			ptr->myDepth = newDepth;
+			instanceList.erase(instanceList.begin() + i); // Remove old
+			return;
+		}
+	}
+}
+
 void Game::BeginDraw()
 {
-	for (auto it : instanceList) { it->BeginDraw(window); }
+	for (InstanceBase* it : instanceList) { it->BeginDraw(window); }
 }
 
 void Game::Draw()
 {
-	for (auto it : instanceList) { it->Draw(window); }
+	for (InstanceBase* it : instanceList) { it->Draw(window); }
 }
 
 void Game::EndDraw()
 {
-	for (auto it : instanceList) { it->EndDraw(window); }
+	for (InstanceBase* it : instanceList) { it->EndDraw(window); }
 }
 
 void Game::DrawGUI()
@@ -323,4 +358,5 @@ Game::~Game()
 		delete(instanceList.at(i));
 		instanceList.erase(instanceList.begin() + i);
 	}
+	UnloadTextures();
 }

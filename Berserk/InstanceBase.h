@@ -45,7 +45,10 @@ public:
 		myVScale,
 		myRoom,
 		myType,
-		myHP;
+		myHP,
+		myDepth;
+
+	InstanceBase* myID;
 	
 	sf::RectangleShape myCollider;
 	std::string mySpriteName;

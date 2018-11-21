@@ -5,10 +5,6 @@
 #include <cmath>
 #include "Game.h"
 
-Player::Player()
-{
-}
-
 Player::~Player()
 {
 }
@@ -20,6 +16,13 @@ void Player::Init()
 	myMoveAcc = 0.05f;
 	myMoveFric = 0.85f; 
 
+	mySwordDist = -40;
+	mySwordDefaultDist = mySwordDist;
+	mySwordExtendedDist = -80;
+	mySwordSwingSpd = 0.2f;
+	mySwordSwingMoveSpd = 0.8f;
+	mySwordExtendSpd = 0.3;
+
 	baseSprite = mySpriteName;
 	currentAnim = idle;
 	subImg = 0;
@@ -28,14 +31,17 @@ void Player::Init()
 
 	// Creating and storing collider so that we dont need to recreate each frame
 	sf::Sprite tempSprite = SpriteLib::GetSprite(mySpriteName);
+	myWCentering = tempSprite.getTextureRect().width/2;
+	myHCentering = tempSprite.getTextureRect().height/2;
 	myCollider.setPosition(myX, myY);
 	myCollider.setSize(sf::Vector2f(tempSprite.getTextureRect().width, tempSprite.getTextureRect().height));
-
+	myCollider.setOrigin(tempSprite.getTextureRect().width / 2, tempSprite.getTextureRect().height / 2);
 	mySword = Game::AddInstance(Game::playerSword, "basicSword", myX, myY);
 }
 
 void Player::Update()
 {
+	#pragma region Movement
 	// Movement
 	float tempH = ((int)Input::KeyDown('D') - (int)Input::KeyDown('A'))*myMoveAcc;
 	float tempV = ((int)Input::KeyDown('S') - (int)Input::KeyDown('W'))*myMoveAcc;
@@ -55,15 +61,28 @@ void Player::Update()
 	{
 		currentAnim = idle;
 	}
-	myVSpd *= pow(myMoveFric, Time::DeltaTime());//myMoveFric*Time::DeltaTime();
-	myHSpd *= pow(myMoveFric, Time::DeltaTime());//myMoveFric*Time::DeltaTime();
+	myVSpd *= pow(myMoveFric, Time::DeltaTime());
+	myHSpd *= pow(myMoveFric, Time::DeltaTime());
+	#pragma endregion
 
-	
+	#pragma region SwordSwing
+	if (Input::KeyDown(Input::mbLeft))
+	{
+		myVSpd *= pow(mySwordSwingMoveSpd, Time::DeltaTime());
+		myHSpd *= pow(mySwordSwingMoveSpd, Time::DeltaTime());
+		mySwordDist += (mySwordExtendedDist - mySwordDist)*mySwordExtendSpd*Time::DeltaTime();
+	}
+	else
+	{
+		mySwordDist += (mySwordDefaultDist - mySwordDist)*mySwordExtendSpd*Time::DeltaTime();
+	}
+	#pragma endregion
 
+	#pragma region Collisions
 	// Collisions
 	// Horizontal
 	myCollider.setPosition(myX + myHSpd, myY);
-	InstanceBase* it = Game::InstanceCollision(dynamic_cast<InstanceBase*>(this), Game::crate);
+	InstanceBase* it = Game::InstanceCollision(myID, Game::crate);
 	if (it != nullptr)
 	{
 		int sign = 1;
@@ -75,7 +94,7 @@ void Player::Update()
 		{
 			myHSpd += sign;
 			myCollider.setPosition(myX + myHSpd, myY);
-			it = Game::InstanceCollision(dynamic_cast<InstanceBase*>(this), Game::crate);
+			it = Game::InstanceCollision(myID, Game::crate);
 		}
 	}
 
@@ -104,10 +123,14 @@ void Player::Update()
 	{
 		myHSpd = 0;
 	}
+	myCollider.setPosition(myX, myY); // Reset collider position
+#pragma endregion
 
-	mySword->myX = myX;
-	mySword->myY = myY - 50;
+	mySword->myX = cos((mySword->myDir + 90) / (180 / Math::pi)) * mySwordDist + myX;
+	mySword->myY = sin((mySword->myDir + 90) / (180 / Math::pi)) * mySwordDist + myY;
+	mySword->myDir += Math::DirDiff(mySword->myDir, Math::RadToDir(Math::PointDirection(myX, myY, Input::GetMouseX(), Input::GetMouseY())) + 90)*mySwordSwingSpd*Time::DeltaTime();
 
+	#pragma region Animations
 	// Animations
 	/*
 	subImg += Time::DeltaTime() / 4;
@@ -132,6 +155,7 @@ void Player::Update()
 		break;
 	}
 	*/
+	#pragma endregion
 }
 
 // When the player takes damage. It makes more sense when you call the method from another instance, i promise! xD

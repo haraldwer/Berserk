@@ -1,12 +1,6 @@
 #include "pch.h"
 #include "PlayerSword.h"
 #include "Game.h"
-#include "Math.h"
-#include "Input.h"
-
-PlayerSword::PlayerSword()
-{
-}
 
 PlayerSword::~PlayerSword()
 {
@@ -14,7 +8,15 @@ PlayerSword::~PlayerSword()
 
 void PlayerSword::Init()
 {
+	Game::DepthSort(myID, 1);
+
 	// Comment and stuff
+	sf::Sprite tempSprite = SpriteLib::GetSprite(mySpriteName);
+	myWCentering = tempSprite.getTextureRect().width / 2;
+	myHCentering = tempSprite.getTextureRect().height / 2;
+	myCollider.setPosition(myX, myY);
+	myCollider.setSize(sf::Vector2f(tempSprite.getTextureRect().width, tempSprite.getTextureRect().height));
+	myCollider.setOrigin(tempSprite.getTextureRect().width / 2, tempSprite.getTextureRect().height / 2);
 }
 
 void PlayerSword::Update()
@@ -24,6 +26,4 @@ void PlayerSword::Update()
 	{
 		it->DealDamage(1);
 	}
-	
-	myDir = Math::PointDirection(0, 0, Input::GetMouseX(), Input::GetMouseY());
 }

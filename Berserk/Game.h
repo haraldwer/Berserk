@@ -20,6 +20,7 @@ public:
 	static void ClearInstanceList(enum TYPE ignore[]);
 	static void ClearInstanceList();
 	static sf::RenderWindow* window;
+	static void DepthSort(InstanceBase *, int newDepth);
 
 	static InstanceBase* InstanceCollision(InstanceBase* aCollider, enum TYPE aTypeToCheckAgainst);
 	static std::vector<InstanceBase*> InstanceCollisionList(InstanceBase* theObjectToCheck, TYPE aTypeToCheckAgainst);
@@ -30,6 +31,7 @@ private:
 	void BeginUpdate();
 	void EndUpdate();
 	void Update();
+
 
 	void BeginDraw();
 	void Draw();

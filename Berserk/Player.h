@@ -6,7 +6,6 @@ class Player : public InstanceBase
 	using InstanceBase::InstanceBase;
 
 	public:
-		Player();
 		~Player();
 		virtual void Init() override;
 		virtual void Update() override;
@@ -19,7 +18,13 @@ class Player : public InstanceBase
 		int myAttackCD;
 		float myMoveAcc;
 		float myMoveFric;
+		float mySwordDist;
+		int mySwordDefaultDist;
+		int mySwordExtendedDist;
 		InstanceBase* mySword;
+		float mySwordSwingSpd;
+		float mySwordSwingMoveSpd;
+		float mySwordExtendSpd;
 
 		// Animation stuff
 		std::string baseSprite;

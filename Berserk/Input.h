@@ -10,9 +10,11 @@ private:
 public:
 	Input();
 	~Input();
+	static enum mouseButtons {mbRight, mbLeft};
 	static bool KeyDown(char aKey);
 	static int GetMouseX();
 	static int GetMouseY();
+	static bool MouseDown(int aKey);
 	static void UpdateInput(sf::RenderWindow* window);
 };
 #endif

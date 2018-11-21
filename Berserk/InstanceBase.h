@@ -21,6 +21,7 @@ public:
 	virtual void EndDraw(sf::RenderWindow* window);
 	virtual void DealDamage(int damage);
 	virtual void Die();
+
 	
 	InstanceBase();
 	explicit InstanceBase(int aType, const std::string &aSpriteName, const float &anX, const float &aY);

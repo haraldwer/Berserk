@@ -9,6 +9,7 @@ class Player : public InstanceBase
 		~Player();
 		virtual void Init() override;
 		virtual void Update() override;
+		virtual void EndUpdate() override;
 		virtual void Die() override;
 		virtual void DealDamage(int damage) override;
 
@@ -19,6 +20,8 @@ class Player : public InstanceBase
 		float myMoveAcc;
 		float myMoveFric;
 		float mySwordDist;
+		float myViewSpd;
+		
 		int mySwordDefaultDist;
 		int mySwordExtendedDist;
 		InstanceBase* mySword;

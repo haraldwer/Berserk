@@ -4,6 +4,8 @@
 
 int Input::mouseX;
 int Input::mouseY;
+int Input::mouseGlobalX;
+int Input::mouseGlobalY;
 
 Input::Input()
 {
@@ -33,6 +35,16 @@ int Input::GetMouseY()
 	return mouseY;
 }
 
+int Input::GetMouseGlobalX()
+{
+	return mouseGlobalX;
+}
+
+int Input::GetMouseGlobalY()
+{
+	return mouseGlobalY;
+}
+
 bool Input::MouseDown(int aKey)
 {
 	switch (aKey)
@@ -53,4 +65,7 @@ void Input::UpdateInput(sf::RenderWindow * window)
 {
 	mouseX = sf::Mouse::getPosition(*window).x;
 	mouseY = sf::Mouse::getPosition(*window).y;
+	mouseGlobalX = window->mapPixelToCoords(sf::Mouse::getPosition(*window)).x;
+	mouseGlobalY = window->mapPixelToCoords(sf::Mouse::getPosition(*window)).y;
+	
 }

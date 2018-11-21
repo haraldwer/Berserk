@@ -16,9 +16,9 @@ void Player::Init()
 	myMoveAcc = 0.05f;
 	myMoveFric = 0.85f; 
 
-	mySwordDist = -40;
+	mySwordDist = -50;
 	mySwordDefaultDist = mySwordDist;
-	mySwordExtendedDist = -80;
+	mySwordExtendedDist = -100;
 	mySwordSwingSpd = 0.2f;
 	mySwordSwingMoveSpd = 0.8f;
 	mySwordExtendSpd = 0.3;
@@ -26,6 +26,8 @@ void Player::Init()
 	baseSprite = mySpriteName;
 	currentAnim = idle;
 	subImg = 0;
+
+	myViewSpd = 0.05f;
 
 	myHP = 3; // Temp variables
 
@@ -124,11 +126,11 @@ void Player::Update()
 		myHSpd = 0;
 	}
 	myCollider.setPosition(myX, myY); // Reset collider position
-#pragma endregion
+	#pragma endregion
 
 	mySword->myX = cos((mySword->myDir + 90) / (180 / Math::pi)) * mySwordDist + myX;
 	mySword->myY = sin((mySword->myDir + 90) / (180 / Math::pi)) * mySwordDist + myY;
-	mySword->myDir += Math::DirDiff(mySword->myDir, Math::RadToDir(Math::PointDirection(myX, myY, Input::GetMouseX(), Input::GetMouseY())) + 90)*mySwordSwingSpd*Time::DeltaTime();
+	mySword->myDir += Math::DirDiff(mySword->myDir, Math::RadToDir(Math::PointDirection(myX, myY, Input::GetMouseGlobalX(), Input::GetMouseGlobalY())) + 90)*mySwordSwingSpd*Time::DeltaTime();
 
 	#pragma region Animations
 	// Animations
@@ -156,6 +158,12 @@ void Player::Update()
 	}
 	*/
 	#pragma endregion
+}
+
+void Player::EndUpdate()
+{
+	InstanceBase::EndUpdate();
+	Game::view->move((myX - Game::view->getCenter().x)*myViewSpd*Time::DeltaTime(), (myY - Game::view->getCenter().y)*myViewSpd*Time::DeltaTime());
 }
 
 // When the player takes damage. It makes more sense when you call the method from another instance, i promise! xD

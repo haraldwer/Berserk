@@ -18,6 +18,7 @@
 
 std::vector<InstanceBase*> Game::instanceList;
 sf::RenderWindow* Game::window;
+sf::View* Game::view;
 
 Game::Game()
 {
@@ -25,7 +26,7 @@ Game::Game()
 	SpriteLib::Init(); // SpriteLibrary
 	Time::Init(); // Delta timing
 	LoadSprites();
-	DBOUT("Game Initialized");
+	std::cout<<("Game Initialized");
 
 	AddInstance(control, "", 0, 0);
 
@@ -40,6 +41,7 @@ void Game::InitRenderer(int h, int w)
 	window->create(sf::VideoMode(w, h), "Berserk");
 	height = h;
 	width = w;
+	view = new sf::View(window->getDefaultView());
 }
 
 void Game::LoadSprites()
@@ -208,7 +210,7 @@ InstanceBase* Game::AddInstance(enum TYPE t, std::string spriteName, float xPos,
 		newInstance->myID = newInstance;
 		newInstance->Init();
 		instanceList.push_back(dynamic_cast<InstanceBase*>(newInstance));
-		Game::DepthSort(newInstance, newInstance->myDepth);
+		Game::SetInstanceDepth(newInstance, newInstance->myDepth);
 	}
 	return newInstance;
 }
@@ -226,6 +228,14 @@ bool Game::Run()
 	{
 		if (event.type == sf::Event::Closed)
 			window->close();
+
+		// catch the resize events
+		if (event.type == sf::Event::Resized)
+		{
+			// update the view to the new size of the window
+			sf::FloatRect visibleArea(0.f, 0.f, event.size.width, event.size.height);
+			window->setView(sf::View(visibleArea));
+		}
 	}
 
 	// ESC Quit
@@ -247,7 +257,8 @@ bool Game::Run()
 		EndUpdate();
 
 		// Draw
-		window->clear();
+		window->clear(sf::Color(255, 255, 255));
+		window->setView(*view);
 		BeginDraw();
 		Draw(); // Default Draw
 		EndDraw();
@@ -297,34 +308,42 @@ void Game::EndUpdate()
 #pragma endregion
 
 #pragma region Handle draw
-void Game::DepthSort(InstanceBase* ptr, int newDepth)
+void Game::SetInstanceDepth(InstanceBase* ptr, int newDepth)
 {
-	for (int i = 0; i < instanceList.size(); i++) 
+	int size = instanceList.size();
+	if(size > 0)
 	{
-		if (instanceList[i] == ptr)
+		for (int i = 0; i < size; i++)
 		{
-			for (int i2 = 0; i2 < instanceList.size(); i2++)
+			if (instanceList[i] == ptr)
 			{
-				if (ptr->myDepth < instanceList[i2]->myDepth)
+				for (int i2 = 0; i2 < instanceList.size(); i2++)
 				{
-					instanceList.insert(instanceList.begin() + i2, ptr); // Place at new location
-					ptr->myDepth = newDepth;
-					if (i >= i2)
+					if (newDepth < instanceList[i2]->myDepth)
 					{
-						instanceList.erase(instanceList.begin() + i + 1); // Remove old
+						instanceList.insert(instanceList.begin() + i2, ptr); // Place at new location
+						ptr->myDepth = newDepth;
+						if (i >= i2)
+						{
+							instanceList.erase(instanceList.begin() + i + 1); // Remove old
+						}
+						else
+						{
+							instanceList.erase(instanceList.begin() + i); // Remove old
+						}
+						return;
 					}
-					else
-					{
-						instanceList.erase(instanceList.begin() + i); // Remove old
-					}
-					return;
 				}
+				instanceList.push_back(ptr); // Place at new location
+				ptr->myDepth = newDepth;
+				instanceList.erase(instanceList.begin() + i); // Remove old
+				return;
 			}
-			instanceList.push_back(ptr); // Place at new location
-			ptr->myDepth = newDepth;
-			instanceList.erase(instanceList.begin() + i); // Remove old
-			return;
 		}
+	}
+	else
+	{
+		ptr->myDepth = newDepth;
 	}
 }
 

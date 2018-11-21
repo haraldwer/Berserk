@@ -8,12 +8,12 @@
 
 #ifndef PCH_H
 #define PCH_H
-#define DBOUT( s )							\
+/*#define DBOUT( s )							\
 {											\
    std::wostringstream os_;					\
    os_ << s;								\
    OutputDebugStringW( os_.str().c_str() ); \
-}
+}*/
 // TODO: add headers that you want to pre-compile here
 
 #endif //PCH_H

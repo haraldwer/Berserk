@@ -8,7 +8,7 @@ PlayerSword::~PlayerSword()
 
 void PlayerSword::Init()
 {
-	Game::DepthSort(myID, 1);
+	Game::SetInstanceDepth(myID, 1);
 
 	// Comment and stuff
 	sf::Sprite tempSprite = SpriteLib::GetSprite(mySpriteName);

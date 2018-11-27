@@ -3,7 +3,6 @@
 #include "Input.h"
 #include "Math.h"
 #include <cmath>
-#include "Game.h"
 
 Player::~Player()
 {

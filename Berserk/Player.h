@@ -1,6 +1,7 @@
 #ifndef PLAYER_HEADER
 #define PLAYER_HEADER
 #include "InstanceBase.h"
+#include "Game.h"
 class Player : public InstanceBase
 {
 	using InstanceBase::InstanceBase;
@@ -11,7 +12,7 @@ class Player : public InstanceBase
 		virtual void Update() override;
 		virtual void EndUpdate() override;
 		virtual void Die() override;
-		virtual void DealDamage(int damage) override;
+		virtual void DealDamage(int damage) override; 
 
 	private:
 		// General stuff

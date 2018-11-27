@@ -20,7 +20,9 @@
 #include "Crate.h"
 #include "PlayerSword.h"
 
-std::vector<InstanceBase*> Game::instanceList;
+std::vector<std::vector<InstanceBase*>> Game::roomList;
+int Game::currentRoom;
+//std::vector<InstanceBase*> Game::instanceList;
 sf::RenderWindow* Game::window;
 sf::View* Game::view;
 
@@ -32,6 +34,8 @@ Game::Game()
 	LoadSprites();
 	std::cout<<("Game Initialized");
 
+	roomList.push_back(std::vector<InstanceBase*>()); // Adding first room
+	currentRoom = 0;
 	AddInstance(control, "", 0, 0);
 
 	std::ofstream myfile;
@@ -153,21 +157,21 @@ sf::Sprite Game::LoadSprite(const char* INPUT_FILENAME)
 
 InstanceBase* Game::FindInstance(enum TYPE t)
 {
-	for (auto it : instanceList)
+	for (auto it : roomList[currentRoom])
 	{
 		if (it->myType == t)
 		{
 			return it;
 		}
 	}
-	return instanceList.at(0);
+	return roomList[currentRoom].at(0);
 }
 
 InstanceBase* Game::FindNearest(enum TYPE t, float x, float y)
 {
 	float nearestDist = -1;
-	InstanceBase* nearest = instanceList[0];
-	for (auto it : instanceList)
+	InstanceBase* nearest = nullptr;
+	for (auto it : roomList[currentRoom])
 	{
 		if (it->myType == t)
 		{
@@ -184,7 +188,7 @@ InstanceBase* Game::FindNearest(enum TYPE t, float x, float y)
 
 InstanceBase* Game::InstanceCollision(InstanceBase* aCollider, enum TYPE aTypeToCheckAgainst)
 {
-	for (auto it : instanceList)
+	for (auto it : roomList[currentRoom])
 	{
 		if (it->myType == aTypeToCheckAgainst)
 		{
@@ -202,7 +206,7 @@ std::vector<InstanceBase*> Game::InstanceCollisionList(InstanceBase* theObjectTo
 	std::vector<InstanceBase*> returnList = std::vector<InstanceBase*>();
 	if (aTypeToCheckAgainst == Game::solids)
 	{
-		for (auto it : instanceList)
+		for (auto it : roomList[currentRoom])
 		{
 			if (it->myIsSolid)
 			{
@@ -215,7 +219,7 @@ std::vector<InstanceBase*> Game::InstanceCollisionList(InstanceBase* theObjectTo
 	}
 	else
 	{
-		for (auto it : instanceList)
+		for (auto it : roomList[currentRoom])
 		{
 			if (it->myType == aTypeToCheckAgainst)
 			{
@@ -231,13 +235,13 @@ std::vector<InstanceBase*> Game::InstanceCollisionList(InstanceBase* theObjectTo
 
 void Game::ClearInstanceList(enum TYPE ignore[])
 {
-	for (auto it : instanceList)
+	for (auto it : roomList[currentRoom])
 	{
 		it->myDestroy = true;
 	}
 	for (int i = 0; i < sizeof(ignore) / sizeof(*ignore); i++)
 	{
-		for (auto it : instanceList)
+		for (auto it : roomList[currentRoom])
 		{
 			if (it->myType == ignore[i])
 			{
@@ -247,11 +251,24 @@ void Game::ClearInstanceList(enum TYPE ignore[])
 	}
 }
 
-void Game::ClearInstanceList()
+void Game::ClearInstanceList(bool clearAllRooms)
 {
-	for (auto it : instanceList)
+	if (clearAllRooms)
 	{
-		it->myDestroy = true;
+		for (auto list : roomList)
+		{
+			for (auto it : list)
+			{
+				it->myDestroy = true;
+			}
+		}
+	}
+	else
+	{
+		for (auto it : roomList[currentRoom])
+		{
+			it->myDestroy = true;
+		}
 	}
 }
 
@@ -272,16 +289,16 @@ InstanceBase* Game::AddInstance(enum TYPE t, std::string spriteName, float xPos,
 	switch (t)
 	{
 	case control:
-		newInstance = new Control(t, spriteName, xPos, yPos);
+		newInstance = new Control(t, spriteName, xPos, yPos, currentRoom);
 		break;
 	case player:
-		newInstance = new Player(t, spriteName, xPos, yPos);
+		newInstance = new Player(t, spriteName, xPos, yPos, currentRoom);
 		break;
 	case crate:
-		newInstance = new Crate(t, spriteName, xPos, yPos);
+		newInstance = new Crate(t, spriteName, xPos, yPos, currentRoom);
 		break;
 	case playerSword:
-		newInstance = new PlayerSword(t, spriteName, xPos, yPos);
+		newInstance = new PlayerSword(t, spriteName, xPos, yPos, currentRoom);
 		break;
 
 	default:
@@ -292,7 +309,7 @@ InstanceBase* Game::AddInstance(enum TYPE t, std::string spriteName, float xPos,
 	{
 		newInstance->myID = newInstance;
 		newInstance->Init();
-		instanceList.push_back(dynamic_cast<InstanceBase*>(newInstance));
+		roomList[currentRoom].push_back(dynamic_cast<InstanceBase*>(newInstance));
 		Game::SetInstanceDepth(newInstance, newInstance->myDepth);
 	}
 	return newInstance;
@@ -332,7 +349,7 @@ bool Game::Run()
 	Time::NewFrame(); // Calculate delta
 	Input::UpdateInput(window); // Update mouse position relative to window
 
-	if (instanceList.size() > 0) // Stack overflow if empty
+	if (roomList.size() > 0 && roomList[currentRoom].size() > 0) // Stack overflow if empty
 	{
 		// Update
 		BeginUpdate();
@@ -355,36 +372,36 @@ bool Game::Run()
 #pragma region Handle update
 void Game::BeginUpdate()
 {
-	for (int i = 0; i < instanceList.size(); i++)
+	for (int i = 0; i < roomList[currentRoom].size(); i++)
 	{
-		instanceList[i]->BeginUpdate();
+		roomList[currentRoom][i]->BeginUpdate();
 	}
 }
 
 void Game::Update()
 {
-	for (int i = 0; i < instanceList.size(); i++)
+	for (int i = 0; i < roomList[currentRoom].size(); i++)
 	{
-		instanceList[i]->Update();
+		roomList[currentRoom][i]->Update();
 	}
 }
 
 void Game::EndUpdate()
 {
-	for (int i = 0; i < instanceList.size(); i++)
+	for (int i = 0; i < roomList[currentRoom].size(); i++)
 	{
-		instanceList[i]->EndUpdate();
+		roomList[currentRoom][i]->EndUpdate();
 	}
 
 	// Destroy
 
-	for (int i = instanceList.size() - 1; i >= 0; i--)
+	for (int i = roomList[currentRoom].size() - 1; i >= 0; i--)
 	{
-		if (instanceList.at(i)->myDestroy)
+		if (roomList[currentRoom].at(i)->myDestroy)
 		{
-			instanceList.at(i)->~InstanceBase();
-			delete(instanceList.at(i));
-			instanceList.erase(instanceList.begin() + i);
+			roomList[currentRoom].at(i)->~InstanceBase();
+			delete(roomList[currentRoom].at(i));
+			roomList[currentRoom].erase(roomList[currentRoom].begin() + i);
 		}
 	}
 }
@@ -393,33 +410,33 @@ void Game::EndUpdate()
 #pragma region Handle draw
 void Game::SetInstanceDepth(InstanceBase* ptr, int newDepth)
 {
-	int size = instanceList.size();
+	int size = roomList[currentRoom].size();
 	if(size > 0)
 	{
 		for (int i = 0; i < size; i++)
 		{
-			if (instanceList[i] == ptr)
+			if (roomList[currentRoom][i] == ptr)
 			{
-				for (int i2 = 0; i2 < instanceList.size(); i2++)
+				for (int i2 = 0; i2 < roomList[currentRoom].size(); i2++)
 				{
-					if (newDepth < instanceList[i2]->myDepth)
+					if (newDepth < roomList[currentRoom][i2]->myDepth)
 					{
-						instanceList.insert(instanceList.begin() + i2, ptr); // Place at new location
+						roomList[currentRoom].insert(roomList[currentRoom].begin() + i2, ptr); // Place at new location
 						ptr->myDepth = newDepth;
 						if (i >= i2)
 						{
-							instanceList.erase(instanceList.begin() + i + 1); // Remove old
+							roomList[currentRoom].erase(roomList[currentRoom].begin() + i + 1); // Remove old
 						}
 						else
 						{
-							instanceList.erase(instanceList.begin() + i); // Remove old
+							roomList[currentRoom].erase(roomList[currentRoom].begin() + i); // Remove old
 						}
 						return;
 					}
 				}
-				instanceList.push_back(ptr); // Place at new location
+				roomList[currentRoom].push_back(ptr); // Place at new location
 				ptr->myDepth = newDepth;
-				instanceList.erase(instanceList.begin() + i); // Remove old
+				roomList[currentRoom].erase(roomList[currentRoom].begin() + i); // Remove old
 				return;
 			}
 		}
@@ -432,17 +449,17 @@ void Game::SetInstanceDepth(InstanceBase* ptr, int newDepth)
 
 void Game::BeginDraw()
 {
-	for (InstanceBase* it : instanceList) { it->BeginDraw(window); }
+	for (InstanceBase* it : roomList[currentRoom]) { it->BeginDraw(window); }
 }
 
 void Game::Draw()
 {
-	for (InstanceBase* it : instanceList) { it->Draw(window); }
+	for (InstanceBase* it : roomList[currentRoom]) { it->Draw(window); }
 }
 
 void Game::EndDraw()
 {
-	for (InstanceBase* it : instanceList) { it->EndDraw(window); }
+	for (InstanceBase* it : roomList[currentRoom]) { it->EndDraw(window); }
 }
 
 void Game::DrawGUI()
@@ -454,11 +471,11 @@ void Game::DrawGUI()
 Game::~Game()
 {
 	// Remove pointers from memory
-	for (int i = instanceList.size() - 1; i >= 0; i--)
+	for (int i = roomList[currentRoom].size() - 1; i >= 0; i--)
 	{
-		instanceList.at(i)->~InstanceBase();
-		delete(instanceList.at(i));
-		instanceList.erase(instanceList.begin() + i);
+		roomList[currentRoom].at(i)->~InstanceBase();
+		delete(roomList[currentRoom].at(i));
+		roomList[currentRoom].erase(roomList[currentRoom].begin() + i);
 	}
 	UnloadTextures();
 }

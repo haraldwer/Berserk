@@ -24,7 +24,7 @@ public:
 
 	
 	InstanceBase();
-	explicit InstanceBase(int aType, const std::string &aSpriteName, const float &anX, const float &aY);
+	explicit InstanceBase(int aType, const std::string &aSpriteName, const float &anX, const float &aY, int aRoom);
 	virtual ~InstanceBase();
 
 	float

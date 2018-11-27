@@ -6,7 +6,7 @@ InstanceBase::InstanceBase()
 	// Default and empty
 }
 
-InstanceBase::InstanceBase(int aType, const std::string &aSpriteName, const float &anX, const float &aY)
+InstanceBase::InstanceBase(int aType, const std::string &aSpriteName, const float &anX, const float &aY, int aRoom)
 	:
 	mySpriteName(aSpriteName),
 	myX(anX),
@@ -23,7 +23,8 @@ InstanceBase::InstanceBase(int aType, const std::string &aSpriteName, const floa
 	myVScale(1),
 	myType(aType),
 	myHP(0),
-	myDepth(0)
+	myDepth(0),
+	myRoom(aRoom)
 {
 	//sf::Sprite tempSprite = SpriteLib::GetSprite(mySpriteName);
 	myCollider.setSize(sf::Vector2f(0, 0));

@@ -12,13 +12,15 @@ public:
 	~Game();
 	enum TYPE { control, player, crate, playerSword, solids, baseEnemy };
 	static InstanceBase* AddInstance(enum TYPE t, std::string spriteName, float xPos, float yPos);
-	static std::vector<InstanceBase*> instanceList;
+	//static std::vector<InstanceBase*> instanceList; // Remove this
+	static std::vector<std::vector<InstanceBase*>> roomList;
+	static int currentRoom;
 	static InstanceBase* FindInstance(enum TYPE t);
 	static InstanceBase* FindNearest(enum TYPE t, float x, float y);
 	unsigned height;
 	unsigned width;
 	static void ClearInstanceList(enum TYPE ignore[]);
-	static void ClearInstanceList();
+	static void ClearInstanceList(bool clearAllRooms);
 	static sf::RenderWindow* window;
 	static sf::View* view;
 	static void SetInstanceDepth(InstanceBase *, int newDepth);

@@ -44,6 +44,8 @@ private:
 	std::vector<sf::Texture*> textureContainer;
 	void UnloadTextures();
 	void LoadSprites();
+
+	int convertIntToString(std::string);
 	
 };
 #endif

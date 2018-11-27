@@ -1,0 +1,8 @@
+1
+crate
+231
+45
+1
+basicSword
+343
+125

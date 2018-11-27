@@ -3,6 +3,10 @@
 #include <iostream>
 #include <Windows.h>
 #include <sstream>
+#include <SFML/System/InputStream.hpp>
+#include <SFML/System/NonCopyable.hpp>
+#include <iostream>
+#include <fstream>
 
 // Personal static classes
 #include "SpriteLib.h"
@@ -34,6 +38,68 @@ Game::Game()
 	currentRoom = 0;
 	AddInstance(control, "", 0, 0);
 
+	std::ofstream myfile;
+	/*myfile.open("example.txt");
+	
+//	myfile << "Writing this to a file so harald can see.\n";
+	myfile.close();*/
+
+	std::string line;
+	int row = 0;
+	TYPE enumType = (TYPE)2;
+	std::string tempName = "";
+	int tempX = 0;
+	int tempY = 0;
+	
+	std::ifstream myfile1("example.txt");
+	if (myfile1.is_open())
+	{
+		std::cout << "its opened" << '\n';
+		while (std::getline(myfile1, line))
+		{
+			std::cout << line + + " " +std::to_string(row) << '\n';
+
+			if (row == 0)
+			{
+				//finns inget fint sätt att ta string till enum, antignen stor if statement eller komma ihåg vilket nummer som är vilket objekt
+				enumType = (TYPE)convertIntToString(line);
+			}
+
+			if (row == 1)
+			{
+				tempName = line;
+			}
+
+			if (row == 2)
+			{
+				tempX = convertIntToString(line);
+			}
+
+			if (row == 3)
+			{
+				tempY = convertIntToString(line);
+			}
+			row++;
+
+			if (row == 4)
+			{
+				row = 0;
+				AddInstance(enumType,tempName,tempX,tempY);
+			}
+		}
+		myfile.close();
+		
+	}
+
+	/*
+	sf::FileInputStream stream;
+	std::string temp = "funkar inte";
+	std::string filePath = "Content/rm0.room";
+	stream.open(filePath);
+	stream.read(,stream.getSize()) = temp;
+	//stream.read(temp, stream.getSize());
+	std::cout << (temp);
+	*/
 	// Main loop
 	while (Run());
 }
@@ -80,6 +146,23 @@ void Game::LoadSprites()
 	SpriteLib::AddSprite(LoadSprite("Content/player.png"), "player");
 	SpriteLib::AddSprite(LoadSprite("content/crate.png"), "crate");
 	SpriteLib::AddSprite(LoadSprite("content/basicSword.png"), "basicSword");
+}
+
+int Game::convertIntToString(std::string line)
+{
+	int result = 0;
+	try
+	{
+		result = std::stoi(line);
+	}
+	catch (...) //catches if you didnt enter a number into the thing
+	{
+		//ChooseEnemy(myListOfEnemies); //if it didnt work, do it again
+		std::cout << "didnt convert";
+		return NULL;
+	}
+
+	return result;
 }
 
 //Load PNG file from disk to memory first, then decode to raw pixels in memory.
@@ -422,3 +505,5 @@ Game::~Game()
 	}
 	UnloadTextures();
 }
+
+

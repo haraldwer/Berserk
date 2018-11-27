@@ -39,6 +39,32 @@ Game::Game()
 }
 
 #pragma region Misc
+void Game::LoadRooms()
+{
+	roomList.push_back(std::vector<InstanceBase*>()); // Adding first room
+
+	// THIS IS WHERE WE LOOP THROUGH THE .txt FILES AND LOAD ALL INSTANCES
+	int i = 0;
+	bool roomExists = true;
+	while (roomExists)
+	{
+		// Load file
+		std::string roomData;
+		//std::string[] roomData = LoadRoomData("rm" + i + ".txt");
+		if (roomData != "")
+		{
+			// Loop through and add instances
+			roomExists = true;
+		}
+		else
+		{
+			roomExists = false;
+		}
+	}
+
+	AddInstance(control, "", 0, 0);
+}
+
 void Game::InitRenderer(int h, int w)
 {
 	window = new sf::RenderWindow();

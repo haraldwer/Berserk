@@ -42,6 +42,7 @@ private:
 	void DrawGUI();
 
 	sf::Sprite LoadSprite(const char* INPUT_FILENAME);
+	void LoadRooms();
 	void InitRenderer(int h, int w);
 	std::vector<sf::Texture*> textureContainer;
 	void UnloadTextures();

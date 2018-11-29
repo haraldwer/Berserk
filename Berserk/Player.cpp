@@ -168,7 +168,7 @@ void Player::EndUpdate()
 // When the player takes damage. It makes more sense when you call the method from another instance, i promise! xD
 void Player::DealDamage(int damage)
 {
-	InstanceBase::DealDamage(damage);
+	EnemyBase::DealDamage(damage);
 
 	// Add some indication that damage has been taken
 	//Game::AddInstance(Game::bone, "bone", myX, myY); 

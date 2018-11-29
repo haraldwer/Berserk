@@ -11,4 +11,5 @@ void Crate::Init()
 	myCollider.setPosition(myX, myY);
 	myCollider.setSize(sf::Vector2f(tempSprite.getTextureRect().width, tempSprite.getTextureRect().height));
 	myIsSolid = true;
+	myIsEnemy = true;
 }

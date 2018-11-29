@@ -19,9 +19,6 @@ public:
 	virtual void BeginDraw(sf::RenderWindow* window);
 	virtual void Draw(sf::RenderWindow* window);
 	virtual void EndDraw(sf::RenderWindow* window);
-	virtual void DealDamage(int damage);
-	virtual void Die();
-
 	
 	InstanceBase();
 	explicit InstanceBase(int aType, const std::string &aSpriteName, const float &anX, const float &aY, int aRoom);
@@ -37,7 +34,8 @@ public:
 
 	bool
 		myDestroy,
-		myIsSolid;
+		myIsSolid,
+		myIsEnemy;
 
 	int
 		myWCentering,
@@ -46,7 +44,6 @@ public:
 		myVScale,
 		myRoom,
 		myType,
-		myHP,
 		myDepth;
 
 	InstanceBase* myID;

@@ -1,18 +1,18 @@
 #ifndef PLAYER_HEADER
 #define PLAYER_HEADER
-#include "InstanceBase.h"
+#include "EnemyBase.h"
 #include "Game.h"
-class Player : public InstanceBase
+class Player : public EnemyBase
 {
-	using InstanceBase::InstanceBase;
+	using EnemyBase::EnemyBase;
 
 	public:
 		~Player();
 		virtual void Init() override;
 		virtual void Update() override;
 		virtual void EndUpdate() override;
-		virtual void Die() override;
-		virtual void DealDamage(int damage) override; 
+		virtual void Die();
+		virtual void DealDamage(int damage); 
 
 	private:
 		// General stuff

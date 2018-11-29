@@ -10,7 +10,7 @@ class Game
 public:
 	Game();
 	~Game();
-	enum TYPE { control, player, crate, playerSword, solids, baseEnemy };
+	enum TYPE { control, player, crate, playerSword, solids, EnemyBase, stalker };
 	static InstanceBase* AddInstance(enum TYPE t, std::string spriteName, float xPos, float yPos);
 	//static std::vector<InstanceBase*> instanceList; // Remove this
 	static std::vector<std::vector<InstanceBase*>> roomList;
@@ -43,6 +43,7 @@ private:
 
 	sf::Sprite LoadSprite(const char* INPUT_FILENAME);
 	void LoadRooms();
+	std::string LoadFile(std::string INPUT_FILENAME);
 	void InitRenderer(int h, int w);
 	std::vector<sf::Texture*> textureContainer;
 	void UnloadTextures();

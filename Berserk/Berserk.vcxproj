@@ -133,6 +133,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Crate.h" />
+    <ClInclude Include="EnemyBase.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="InstanceBase.h" />
@@ -141,9 +142,11 @@
     <ClInclude Include="PlayerSword.h" />
     <ClInclude Include="PostMaster.h" />
     <ClInclude Include="SpriteLib.h" />
+    <ClInclude Include="Stalker.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="Control.h" />
     <ClCompile Include="Crate.cpp" />
+    <ClCompile Include="EnemyBase.cpp" />
     <ClCompile Include="Player.h" />
   </ItemGroup>
   <ItemGroup>
@@ -156,6 +159,7 @@
     <ClCompile Include="PlayerSword.cpp" />
     <ClCompile Include="PostMaster.cpp" />
     <ClCompile Include="SpriteLib.cpp" />
+    <ClCompile Include="Stalker.cpp" />
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="Control.cpp" />
     <ClCompile Include="Player.cpp" />

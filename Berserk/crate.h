@@ -1,9 +1,9 @@
 #ifndef CRATE_HEADER
 #define CRATE_HEADER
-#include "InstanceBase.h"
-class Crate : public InstanceBase
+#include "EnemyBase.h"
+class Crate : public EnemyBase
 {
-	using InstanceBase::InstanceBase;
+	using EnemyBase::EnemyBase;
 
 public:
 	~Crate();

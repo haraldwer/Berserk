@@ -19,6 +19,7 @@
 #include "Player.h"
 #include "Crate.h"
 #include "PlayerSword.h"
+#include "Stalker.h"
 
 std::vector<std::vector<InstanceBase*>> Game::roomList;
 int Game::currentRoom;
@@ -38,9 +39,43 @@ Game::Game()
 	currentRoom = 0;
 	AddInstance(control, "", 0, 0);
 
+	// Main loop
+	while (Run());
+}
+
+#pragma region Misc
+void Game::LoadRooms()
+{
+	roomList.push_back(std::vector<InstanceBase*>()); // Adding first room
+
+	// THIS IS WHERE WE LOOP THROUGH THE .txt FILES AND LOAD ALL INSTANCES
+	int i = 0;
+	bool roomExists = true;
+	while (roomExists)
+	{
+		// Load file
+		std::string roomData;// = LoadFile("rm" + i + ".txt");
+		//std::string[] roomData = LoadRoomData("rm" + i + ".txt");
+		if (roomData != "")
+		{
+			// Loop through and add instances
+			roomList.push_back(std::vector<InstanceBase*>()); // Adding first room
+			roomExists = true;
+		}
+		else
+		{
+			roomExists = false;
+		}
+	}
+
+	AddInstance(control, "", 0, 0);
+}
+
+std::string Game::LoadFile(std::string INPUT_FILENAME)
+{
 	std::ofstream myfile;
 	/*myfile.open("example.txt");
-	
+
 //	myfile << "Writing this to a file so harald can see.\n";
 	myfile.close();*/
 
@@ -50,14 +85,14 @@ Game::Game()
 	std::string tempName = "";
 	int tempX = 0;
 	int tempY = 0;
-	
+
 	std::ifstream myfile1("example.txt");
 	if (myfile1.is_open())
 	{
 		std::cout << "its opened" << '\n';
 		while (std::getline(myfile1, line))
 		{
-			std::cout << line + + " " +std::to_string(row) << '\n';
+			std::cout << line + +" " + std::to_string(row) << '\n';
 
 			if (row == 0)
 			{
@@ -84,11 +119,11 @@ Game::Game()
 			if (row == 4)
 			{
 				row = 0;
-				AddInstance(enumType,tempName,tempX,tempY);
+				AddInstance(enumType, tempName, tempX, tempY);
 			}
 		}
 		myfile.close();
-		
+
 	}
 
 	/*
@@ -100,35 +135,7 @@ Game::Game()
 	//stream.read(temp, stream.getSize());
 	std::cout << (temp);
 	*/
-	// Main loop
-	while (Run());
-}
-
-#pragma region Misc
-void Game::LoadRooms()
-{
-	roomList.push_back(std::vector<InstanceBase*>()); // Adding first room
-
-	// THIS IS WHERE WE LOOP THROUGH THE .txt FILES AND LOAD ALL INSTANCES
-	int i = 0;
-	bool roomExists = true;
-	while (roomExists)
-	{
-		// Load file
-		std::string roomData;
-		//std::string[] roomData = LoadRoomData("rm" + i + ".txt");
-		if (roomData != "")
-		{
-			// Loop through and add instances
-			roomExists = true;
-		}
-		else
-		{
-			roomExists = false;
-		}
-	}
-
-	AddInstance(control, "", 0, 0);
+	return "";
 }
 
 void Game::InitRenderer(int h, int w)
@@ -227,7 +234,7 @@ InstanceBase* Game::InstanceCollision(InstanceBase* aCollider, enum TYPE aTypeTo
 	return nullptr;
 }
 
-std::vector<InstanceBase*> Game::InstanceCollisionList(InstanceBase* theObjectToCheck, enum TYPE aTypeToCheckAgainst)
+std::vector<InstanceBase*> Game::InstanceCollisionList(InstanceBase* theObjectToCheck, TYPE aTypeToCheckAgainst)
 {
 	std::vector<InstanceBase*> returnList = std::vector<InstanceBase*>();
 	if (aTypeToCheckAgainst == Game::solids)
@@ -238,6 +245,20 @@ std::vector<InstanceBase*> Game::InstanceCollisionList(InstanceBase* theObjectTo
 			{
 				if (theObjectToCheck->myCollider.getGlobalBounds().intersects(it->myCollider.getGlobalBounds()))
 				{
+					returnList.push_back(it);
+				}
+			}
+		}
+	}
+	else if (aTypeToCheckAgainst == Game::EnemyBase)
+	{
+		for (auto it : roomList[currentRoom])
+		{
+			if (it->myIsEnemy)
+			{
+				if (theObjectToCheck->myCollider.getGlobalBounds().intersects(it->myCollider.getGlobalBounds()))
+				{
+					std::cout << ("Hit stuff");
 					returnList.push_back(it);
 				}
 			}
@@ -326,7 +347,9 @@ InstanceBase* Game::AddInstance(enum TYPE t, std::string spriteName, float xPos,
 	case playerSword:
 		newInstance = new PlayerSword(t, spriteName, xPos, yPos, currentRoom);
 		break;
-
+	case stalker:
+		newInstance = new Stalker(t, spriteName, xPos, yPos, currentRoom);
+		break;
 	default:
 		newInstance = nullptr;
 		break;
@@ -383,7 +406,7 @@ bool Game::Run()
 		EndUpdate();
 
 		// Draw
-		window->clear(sf::Color(255, 255, 255));
+		window->clear(sf::Color(50, 255, 255));
 		window->setView(*view);
 		BeginDraw();
 		Draw(); // Default Draw

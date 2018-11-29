@@ -1,6 +1,6 @@
 #ifndef PLAYER_SWORD_HEADER
 #define PLAYER_SWORD_HEADER
-#include "InstanceBase.h"
+#include "EnemyBase.h"
 class PlayerSword : public InstanceBase
 {
 	using InstanceBase::InstanceBase;

@@ -9,6 +9,7 @@ void Control::Init()
 	// Init logic here
 	Game::AddInstance(Game::player, "player", 100, 100);
 	Game::AddInstance(Game::crate, "crate",300,300);
+	Game::AddInstance(Game::stalker, "basicSword", 0, 0);
 }
 
 Control::Control()

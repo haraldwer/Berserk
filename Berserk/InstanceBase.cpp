@@ -19,10 +19,10 @@ InstanceBase::InstanceBase(int aType, const std::string &aSpriteName, const floa
 	myDir(0),
 	myDestroy(false),
 	myIsSolid(false),
+	myIsEnemy(false),
 	myHScale(1),
 	myVScale(1),
 	myType(aType),
-	myHP(0),
 	myDepth(0),
 	myRoom(aRoom)
 {
@@ -62,26 +62,13 @@ void InstanceBase::Draw(sf::RenderWindow* window)
 		sprite.setPosition(myX, myY);
 		sprite.setOrigin(myWCentering, myHCentering);
 		sprite.setRotation(myDir);
+		window->draw(myCollider);
 		window->draw(sprite);
 	}
 }
 
 void InstanceBase::EndDraw(sf::RenderWindow* window)
 {
-}
-
-void InstanceBase::DealDamage(int damage)
-{
-	myHP -= damage;
-	if (myHP < 0)
-	{
-		Die();
-	}
-}
-
-void InstanceBase::Die()
-{
-	myDestroy = true;
 }
 
 InstanceBase::~InstanceBase()

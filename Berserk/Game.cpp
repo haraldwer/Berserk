@@ -85,15 +85,17 @@ std::string Game::LoadFile(std::string INPUT_FILENAME)
 	std::string tempName = "";
 	int tempX = 0;
 	int tempY = 0;
-
+	std::vector<std::string> fileLines = std::vector<std::string>();
 	std::ifstream myfile1("example.txt");
 	if (myfile1.is_open())
 	{
 		std::cout << "its opened" << '\n';
 		while (std::getline(myfile1, line))
 		{
-			std::cout << line + +" " + std::to_string(row) << '\n';
 
+			std::cout << line + +" " + std::to_string(row) << '\n';
+			fileLines.push_back(line);
+			/*
 			if (row == 0)
 			{
 				//finns inget fint sätt att ta string till enum, antignen stor if statement eller komma ihåg vilket nummer som är vilket objekt
@@ -121,20 +123,59 @@ std::string Game::LoadFile(std::string INPUT_FILENAME)
 				row = 0;
 				AddInstance(enumType, tempName, tempX, tempY);
 			}
+			*/
 		}
 		myfile.close();
 
 	}
+	
 
-	/*
-	sf::FileInputStream stream;
-	std::string temp = "funkar inte";
-	std::string filePath = "Content/rm0.room";
-	stream.open(filePath);
-	stream.read(,stream.getSize()) = temp;
-	//stream.read(temp, stream.getSize());
-	std::cout << (temp);
-	*/
+	for (size_t i = 0; i < fileLines.size(); i++)
+	{
+		if (fileLines[i] == "&&")
+		{
+			// Find next index
+			size_t newIndex = i;
+			while (fileLines[newIndex] < fileLines.size - 1 && fileLines[newIndex] != "&&")
+			{
+				newIndex++;
+			}
+
+			
+			
+			int type = 0;// Load type here
+			int xPos = 0;// Load xPos
+			int yPos = 0;// Load yPos
+			string sprite = 0;// Load sprite
+
+			for (firstIndex to lastIndex)
+			{
+				switch (key)
+				{
+				case "type":
+					type = value;
+					break;
+				}
+			}
+
+			*InstanceBase p = AddInstance(type, sprite, xPos, yPos);
+
+			for (firstIndex to lastIndex)
+			{
+				switch (key)
+				{
+				case "type":
+					type = value;
+					break;
+				}
+			}
+		}
+	}
+	
+
+
+
+
 	return "";
 }
 

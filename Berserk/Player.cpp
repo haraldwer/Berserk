@@ -4,6 +4,9 @@
 #include "Math.h"
 #include <cmath>
 
+Player::Player()
+{
+}
 Player::~Player()
 {
 }

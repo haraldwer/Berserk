@@ -38,6 +38,8 @@ Game::Game()
 	roomList.push_back(std::vector<InstanceBase*>()); // Adding first room
 	currentRoom = 0;
 	AddInstance(control, "", 0, 0);
+	LoadFile("example.txt");
+
 
 	// Main loop
 	while (Run());
@@ -86,10 +88,10 @@ std::string Game::LoadFile(std::string INPUT_FILENAME)
 	int tempX = 0;
 	int tempY = 0;
 
-	std::ifstream myfile1("example.txt");
+	std::ifstream myfile1(INPUT_FILENAME);
 	if (myfile1.is_open())
 	{
-		std::cout << "its opened" << '\n';
+		std::cout << "the file is opened" << '\n';
 		while (std::getline(myfile1, line))
 		{
 			std::cout << line + +" " + std::to_string(row) << '\n';

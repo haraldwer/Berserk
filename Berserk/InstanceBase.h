@@ -17,7 +17,7 @@ public:
 	virtual void EndUpdate();
 
 	virtual void BeginDraw(sf::RenderWindow* window);
-	virtual void Draw(sf::RenderWindow* window);
+	virtual void Draw(sf::RenderWindow* window, bool editorOpen);
 	virtual void EndDraw(sf::RenderWindow* window);
 	
 	InstanceBase();
@@ -35,6 +35,7 @@ public:
 	bool
 		myDestroy,
 		myIsSolid,
+		myIsPersistent,
 		myIsEnemy;
 
 	int

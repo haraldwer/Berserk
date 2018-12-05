@@ -4,6 +4,10 @@
 #include "Math.h"
 #include <cmath>
 
+Player::Player()
+{
+}
+
 Player::~Player()
 {
 }
@@ -16,11 +20,11 @@ void Player::Init()
 	myMoveFric = 0.85f; 
 
 	mySwordDist = -50;
-	mySwordDefaultDist = mySwordDist;
+	mySwordDefaultDist = (int)mySwordDist;
 	mySwordExtendedDist = -100;
 	mySwordSwingSpd = 0.2f;
 	mySwordSwingMoveSpd = 0.8f;
-	mySwordExtendSpd = 0.3;
+	mySwordExtendSpd = 0.3f;
 
 	baseSprite = mySpriteName;
 	currentAnim = idle;
@@ -35,9 +39,9 @@ void Player::Init()
 	myWCentering = tempSprite.getTextureRect().width/2;
 	myHCentering = tempSprite.getTextureRect().height/2;
 	myCollider.setPosition(myX, myY);
-	myCollider.setSize(sf::Vector2f(tempSprite.getTextureRect().width, tempSprite.getTextureRect().height));
-	myCollider.setOrigin(tempSprite.getTextureRect().width / 2, tempSprite.getTextureRect().height / 2);
-	mySword = Game::AddInstance(Game::playerSword, "basicSword", myX, myY);
+	myCollider.setSize((const sf::Vector2f) sf::Vector2f(tempSprite.getTextureRect().width, tempSprite.getTextureRect().height));
+	myCollider.setOrigin(myHCentering, myWCentering);
+	mySword = Game::AddInstance(Game::sword, "basicSword", myX, myY, true);
 }
 
 void Player::Update()

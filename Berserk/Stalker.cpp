@@ -11,6 +11,7 @@ void Stalker::Init()
 	myHCentering = tempSprite.getTextureRect().height / 2;
 	myCollider.setPosition(myX, myY);
 	myCollider.setSize(sf::Vector2f(tempSprite.getTextureRect().width, tempSprite.getTextureRect().height));
+	myCollider.setOrigin(myHCentering, myWCentering);
 	myIsEnemy = true;
 }
 

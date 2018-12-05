@@ -19,6 +19,7 @@ InstanceBase::InstanceBase(int aType, const std::string &aSpriteName, const floa
 	myDir(0),
 	myDestroy(false),
 	myIsSolid(false),
+	myIsPersistent(false),
 	myIsEnemy(false),
 	myHScale(1),
 	myVScale(1),
@@ -53,7 +54,7 @@ void InstanceBase::BeginDraw(sf::RenderWindow* window)
 {
 }
 
-void InstanceBase::Draw(sf::RenderWindow* window)
+void InstanceBase::Draw(sf::RenderWindow* window, bool editorOpen)
 {
 	if (mySpriteName != "")
 	{
@@ -62,7 +63,16 @@ void InstanceBase::Draw(sf::RenderWindow* window)
 		sprite.setPosition(myX, myY);
 		sprite.setOrigin(myWCentering, myHCentering);
 		sprite.setRotation(myDir);
-		window->draw(myCollider);
+		//window->draw(myCollider);
+		window->draw(sprite);
+	}
+	else if (editorOpen)
+	{
+		// Draw sprite
+		sf::Sprite sprite = SpriteLib::GetSprite("unknown");
+		sprite.setPosition(myX, myY);
+		sprite.setOrigin(myWCentering, myHCentering);
+		sprite.setRotation(myDir);
 		window->draw(sprite);
 	}
 }

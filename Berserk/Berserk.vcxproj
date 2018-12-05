@@ -134,12 +134,14 @@
   <ItemGroup>
     <ClInclude Include="Crate.h" />
     <ClInclude Include="EnemyBase.h" />
+    <ClInclude Include="EnvironmentStatic.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="InstanceBase.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="PlayerSword.h" />
+    <ClInclude Include="PineTree.h" />
+    <ClInclude Include="Sword.h" />
     <ClInclude Include="PostMaster.h" />
     <ClInclude Include="SpriteLib.h" />
     <ClInclude Include="Stalker.h" />
@@ -147,6 +149,8 @@
     <ClInclude Include="Control.h" />
     <ClCompile Include="Crate.cpp" />
     <ClCompile Include="EnemyBase.cpp" />
+    <ClCompile Include="EnvironmentStatic.cpp" />
+    <ClCompile Include="PineTree.cpp" />
     <ClCompile Include="Player.h" />
   </ItemGroup>
   <ItemGroup>
@@ -156,7 +160,7 @@
     <ClCompile Include="InstanceBase.cpp" />
     <ClCompile Include="Math.cpp" />
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="PlayerSword.cpp" />
+    <ClCompile Include="Sword.cpp" />
     <ClCompile Include="PostMaster.cpp" />
     <ClCompile Include="SpriteLib.cpp" />
     <ClCompile Include="Stalker.cpp" />

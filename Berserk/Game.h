@@ -10,8 +10,8 @@ class Game
 public:
 	Game();
 	~Game();
-	enum TYPE { control, player, crate, playerSword, solids, EnemyBase, stalker };
-	static InstanceBase* AddInstance(enum TYPE t, std::string spriteName, float xPos, float yPos);
+	enum TYPE { all, control, player, crate, sword, solids, EnemyBase, stalker, pinetree, environmentStatic };
+	static InstanceBase* AddInstance(enum TYPE t, std::string spriteName, float xPos, float yPos, bool doInit);
 	//static std::vector<InstanceBase*> instanceList; // Remove this
 	static std::vector<std::vector<InstanceBase*>> roomList;
 	static int currentRoom;
@@ -23,18 +23,28 @@ public:
 	static void ClearInstanceList(bool clearAllRooms);
 	static sf::RenderWindow* window;
 	static sf::View* view;
+	static sf::Font font;
 	static void SetInstanceDepth(InstanceBase *, int newDepth);
 
 	static InstanceBase* InstanceCollision(InstanceBase* aCollider, enum TYPE aTypeToCheckAgainst);
+	static InstanceBase * RangeCollision(InstanceBase * theObjectToCheck, TYPE aTypeToCheckAgainst, float range);
 	static std::vector<InstanceBase*> InstanceCollisionList(InstanceBase* theObjectToCheck, TYPE aTypeToCheckAgainst);
+	static std::vector<InstanceBase*> RangeCollisionList(InstanceBase * theObjectToCheck, TYPE aTypeToCheckAgainst, float range);
+	static void ChangeRoom(int newRoom);
+	static void InstanceChangeRoom(InstanceBase* instancePointer, int newRoom);
 
 private:
 	bool Run();
+	bool Editor();
+	float eOffX;
+	float eOffY;
+	InstanceBase* eSelected;
+	bool editorActive;
+	bool editorBP;
 
 	void BeginUpdate();
 	void EndUpdate();
 	void Update();
-
 
 	void BeginDraw();
 	void Draw();
@@ -48,7 +58,11 @@ private:
 	std::vector<sf::Texture*> textureContainer;
 	void UnloadTextures();
 	void LoadSprites();
-
+	void EditorPlaceables();
+	void AddEditorPlaceable(int type, std::string);
+	std::vector<int> editorPlaceableEnums;
+	std::vector<std::string> editorPlaceableSprites;
+	std::vector<InstanceBase*> editorTempUIList;
 	int convertIntToString(std::string);
 	
 };

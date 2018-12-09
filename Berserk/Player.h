@@ -7,7 +7,7 @@ class Player : public EnemyBase
 	using EnemyBase::EnemyBase;
 
 	public:
-		Player();
+		
 		~Player();
 		virtual void Init() override;
 		virtual void Update() override;

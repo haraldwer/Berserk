@@ -49,7 +49,7 @@ private:
 	void UnloadTextures();
 	void LoadSprites();
 
-	int convertIntToString(std::string);
+	int ConvertStringToInt(std::string);
 	
 };
 #endif

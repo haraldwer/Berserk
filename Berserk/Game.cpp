@@ -38,7 +38,7 @@ Game::Game()
 	roomList.push_back(std::vector<InstanceBase*>()); // Adding first room
 	currentRoom = 0;
 	AddInstance(control, "", 0, 0);
-
+	LoadFile("example");
 	// Main loop
 	while (Run());
 }
@@ -86,7 +86,8 @@ std::string Game::LoadFile(std::string INPUT_FILENAME)
 	int tempX = 0;
 	int tempY = 0;
 	std::vector<std::string> fileLines = std::vector<std::string>();
-	std::ifstream myfile1("example.txt");
+	std::ifstream myfile1("updated.txt");
+
 	if (myfile1.is_open())
 	{
 		std::cout << "its opened" << '\n';
@@ -94,7 +95,8 @@ std::string Game::LoadFile(std::string INPUT_FILENAME)
 		{
 
 			std::cout << line + +" " + std::to_string(row) << '\n';
-			fileLines.push_back(line);
+			fileLines.push_back(line); //save the current line
+
 			/*
 			if (row == 0)
 			{
@@ -128,53 +130,99 @@ std::string Game::LoadFile(std::string INPUT_FILENAME)
 		myfile.close();
 
 	}
-	
+	std::string tempCurrentString = "";
+	std::string tempCurrentStringCopy = "";
+	int equalsPos = 1; //finds the position of the equals sign 
+	std::string stringKey = ""; //removes everything but the key part, that includes the equal sign, the space before and after said equalsign and the value
+	std::string stringValue = ""; //removes the key, the equa
 
-	for (size_t i = 0; i < fileLines.size(); i++)
+
+
+	for (size_t i = 0; i < fileLines.size(); i++) //loop trough entire document
 	{
-		if (fileLines[i] == "&&")
+		if (fileLines[i] == "&&") //if I find a marker for a new instance
 		{
 			// Find next index
-			size_t newIndex = i;
-			while (fileLines[newIndex] < fileLines.size - 1 && fileLines[newIndex] != "&&")
+			int firstMarker = i;
+			int lastMarker = i+1;//index for the && marker
+			while (/*fileLines[lastMarker]*/lastMarker < (fileLines.size() - 1) && fileLines[lastMarker] != "&&") //medans vi inte är utanför vår lista och vi inte har hittat en marker för en ny instans
 			{
-				newIndex++;
+				lastMarker++; //go down until you find the a new &&
 			}
 
-			
-			
-			int type = 0;// Load type here
+
+			//Default values ??
+			TYPE type = (TYPE)0;// Load type here
 			int xPos = 0;// Load xPos
 			int yPos = 0;// Load yPos
-			string sprite = 0;// Load sprite
+			std::string sprite = "";// Load sprite
 
-			for (firstIndex to lastIndex)
+
+			for(int ii = firstMarker; ii < lastMarker; ii++) //loop trough the lines that are between the two markers
 			{
-				switch (key)
+				//identify what is on the specific line and switch statement it to change the specific value
+				tempCurrentString = fileLines[ii]; //finds the current line we are looking at
+				if (tempCurrentString != "&&"  && tempCurrentString.find_first_of("=") != -1)
 				{
-				case "type":
-					type = value;
-					break;
+					tempCurrentStringCopy = tempCurrentString;
+					equalsPos = tempCurrentString.find_first_of("="); //finds the position of the equals sign 
+					stringKey = tempCurrentString.erase(equalsPos-1,tempCurrentString.length()); //removes everything but the key part, that includes the equal sign, the space before and after said equalsign and the value
+					stringValue = tempCurrentStringCopy.erase(0,equalsPos+1); //removes the key, the equals sign and the space before 
+
+					if (stringKey == "type")
+					{
+						type = (TYPE)ConvertStringToInt(stringValue);
+					}
+					else if (stringKey == "sprite")
+					{
+						sprite = stringValue;
+					}
+					else if (stringKey == "xpos")
+					{
+						xPos = ConvertStringToInt(stringValue);
+					}
+					else if (stringKey == "ypos")
+					{
+						yPos = ConvertStringToInt(stringValue);
+					}
 				}
 			}
 
-			*InstanceBase p = AddInstance(type, sprite, xPos, yPos);
+			std::cout << "vegan "  << '\n';
+			InstanceBase* p = AddInstance(type, sprite, xPos, yPos);
+			
 
-			for (firstIndex to lastIndex)
+			for (int jj = firstMarker; jj < lastMarker; jj++) //loop trough the lines that are between the two markers
 			{
-				switch (key)
+				//identify what is on the specific line and switch statement it to change the specific value
+				if (tempCurrentString != "&&" && tempCurrentString.find_first_of("=") != -1)
 				{
-				case "type":
-					type = value;
-					break;
+					tempCurrentString = fileLines[jj]; //finds the current line we are looking at
+					tempCurrentStringCopy = tempCurrentString;
+					equalsPos = tempCurrentString.find_first_of("="); //finds the position of the equals sign 
+					stringKey = tempCurrentString.erase(equalsPos - 1, tempCurrentString.length()); //removes everything but the key part, that includes the equal sign, the space before and after said equalsign and the value
+					stringValue = tempCurrentStringCopy.erase(0, equalsPos + 1); //removes the key, the equals sign and the space before 
+
+					if (stringKey == "whatever")
+					{
+					
+					}
+					else if (stringKey == "xscale")
+					{
+						sprite = stringValue;
+					}
+					else if (stringKey == "yscale")
+					{
+						xPos = ConvertStringToInt(stringValue);
+					}
+					else if (stringKey == "penisSize")
+					{
+						yPos = ConvertStringToInt(stringValue);
+					}
 				}
 			}
 		}
 	}
-	
-
-
-
 
 	return "";
 }
@@ -196,7 +244,7 @@ void Game::LoadSprites()
 	SpriteLib::AddSprite(LoadSprite("content/basicSword.png"), "basicSword");
 }
 
-int Game::convertIntToString(std::string line)
+int Game::ConvertStringToInt(std::string line)
 {
 	int result = 0;
 	try

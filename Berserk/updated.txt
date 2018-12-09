@@ -1,0 +1,5 @@
+&&
+type = 1
+sprite = player
+xpos = 40
+ypos = 44

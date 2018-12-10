@@ -17,16 +17,12 @@ void Sword::Init()
 	myCollider.setSize(sf::Vector2f(tempSprite.getTextureRect().width*0.6, tempSprite.getTextureRect().height*0.6));
 	myCollider.setOrigin(myHCentering*0.6, myWCentering*0.6);
 	dropped = false;
+	myDamage = 1;
+	mySwingThresh = 0;
 }
 
 void Sword::Update()
 {
-	
-	// Check if colliding with enemy and in that case, deal damage.
-	for (auto it : Game::InstanceCollisionList(dynamic_cast<InstanceBase*>(this), Game::EnemyBase))
-	{
-		dynamic_cast<EnemyBase*>(it)->DealDamage(1);
-	}
 }
 
 void Sword::EndDraw(sf::RenderWindow* window)

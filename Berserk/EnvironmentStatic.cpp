@@ -1,7 +1,5 @@
 #include "EnvironmentStatic.h"
 
-
-
 EnvironmentStatic::EnvironmentStatic()
 {
 }

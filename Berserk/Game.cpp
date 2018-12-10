@@ -8,7 +8,7 @@
 #include <iostream>
 #include <fstream>
 
-// Personal static classes
+// Homemade static classes
 #include "SpriteLib.h"
 #include "Time.h"
 #include "Input.h"
@@ -38,9 +38,9 @@ Game::Game()
 	LoadSprites();
 	if (!font.loadFromFile("Content/Candy Beans.otf"))
 	{
-		// error...
+		std::cout << ("Error loading font\n");
 	}
-	std::cout<<("Game Initialized");
+	std::cout<<("Game Initialized\n");
 
 	roomList.push_back(std::vector<InstanceBase*>()); // Adding first room
 	currentRoom = 0;
@@ -214,6 +214,8 @@ void Game::LoadSprites()
 	SpriteLib::AddSprite(LoadSprite("Content/unknown.png"), "unknown");
 	SpriteLib::AddSprite(LoadSprite("Content/pineTree.png"), "pineTree");
 	SpriteLib::AddSprite(LoadSprite("Content/grass.png"), "grass");
+	SpriteLib::AddSprite(LoadSprite("Content/stone.png"), "stone");
+	std::cout << ("Sprites loaded\n");
 }
 
 void Game::EditorPlaceables()
@@ -224,6 +226,7 @@ void Game::EditorPlaceables()
 	AddEditorPlaceable(Game::stalker, "basicSword");
 	AddEditorPlaceable(Game::pinetree, "pineTree");
 	AddEditorPlaceable(Game::environmentStatic, "grass");
+	AddEditorPlaceable(Game::environmentStatic, "stone");
 }
 
 void Game::AddEditorPlaceable(int type, std::string sprite)
@@ -238,7 +241,7 @@ sf::Sprite Game::LoadSprite(const char* INPUT_FILENAME)
 	sf::Texture *texture = new sf::Texture();
 	if (!texture->loadFromFile(INPUT_FILENAME))
 	{
-		// error...
+		std::cout << ("Error loading sprite: " + (std::string)INPUT_FILENAME + "\n");
 	}
 	texture->setSmooth(true);
 
@@ -248,7 +251,7 @@ sf::Sprite Game::LoadSprite(const char* INPUT_FILENAME)
 	return sprite;
 }
 
-int Game::convertIntToString(std::string line)
+int Game::ConvertIntToString(std::string line)
 {
 	int result = 0;
 	try
@@ -258,7 +261,7 @@ int Game::convertIntToString(std::string line)
 	catch (...) //catches if you didnt enter a number into the thing
 	{
 		//ChooseEnemy(myListOfEnemies); //if it didnt work, do it again
-		std::cout << "didnt convert";
+		std::cout << "Could not convert int to string\n";
 		return NULL;
 	}
 
@@ -302,11 +305,14 @@ InstanceBase* Game::InstanceCollision(InstanceBase* aCollider, enum TYPE aTypeTo
 {
 	for (auto it : roomList[currentRoom])
 	{
-		if (it->myType == aTypeToCheckAgainst)
+		if (it != aCollider)
 		{
-			if (aCollider->myCollider.getGlobalBounds().intersects(it->myCollider.getGlobalBounds()))
+			if (it->myType == aTypeToCheckAgainst)
 			{
-				return it;
+				if (aCollider->myCollider.getGlobalBounds().intersects(it->myCollider.getGlobalBounds()))
+				{
+					return it;
+				}
 			}
 		}
 	}
@@ -317,11 +323,14 @@ InstanceBase* Game::RangeCollision(InstanceBase* theObjectToCheck, enum TYPE aTy
 {
 	for (auto it : roomList[currentRoom])
 	{
-		if (it->myType == aTypeToCheckAgainst)
+		if (it != theObjectToCheck)
 		{
-			if (Math::PointDistance(theObjectToCheck->myX, theObjectToCheck->myY, it->myX, it->myY) < range)
+			if (it->myType == aTypeToCheckAgainst)
 			{
-				return it;
+				if (Math::PointDistance(theObjectToCheck->myX, theObjectToCheck->myY, it->myX, it->myY) < range)
+				{
+					return it;
+				}
 			}
 		}
 	}
@@ -335,11 +344,14 @@ std::vector<InstanceBase*> Game::InstanceCollisionList(InstanceBase* theObjectTo
 	{
 		for (auto it : roomList[currentRoom])
 		{
-			if (it->myIsSolid)
+			if (it != theObjectToCheck)
 			{
-				if (theObjectToCheck->myCollider.getGlobalBounds().intersects(it->myCollider.getGlobalBounds()))
+				if (it->myIsSolid)
 				{
-					returnList.push_back(it);
+					if (theObjectToCheck->myCollider.getGlobalBounds().intersects(it->myCollider.getGlobalBounds()))
+					{
+						returnList.push_back(it);
+					}
 				}
 			}
 		}
@@ -348,11 +360,14 @@ std::vector<InstanceBase*> Game::InstanceCollisionList(InstanceBase* theObjectTo
 	{
 		for (auto it : roomList[currentRoom])
 		{
-			if (it->myIsEnemy)
+			if (it != theObjectToCheck)
 			{
-				if (theObjectToCheck->myCollider.getGlobalBounds().intersects(it->myCollider.getGlobalBounds()))
+				if (it->myIsEnemy)
 				{
-					returnList.push_back(it);
+					if (theObjectToCheck->myCollider.getGlobalBounds().intersects(it->myCollider.getGlobalBounds()))
+					{
+						returnList.push_back(it);
+					}
 				}
 			}
 		}
@@ -361,11 +376,14 @@ std::vector<InstanceBase*> Game::InstanceCollisionList(InstanceBase* theObjectTo
 	{
 		for (auto it : roomList[currentRoom])
 		{
-			if (it->myType == aTypeToCheckAgainst)
+			if (it != theObjectToCheck)
 			{
-				if (theObjectToCheck->myCollider.getGlobalBounds().intersects(it->myCollider.getGlobalBounds()))
+				if (it->myType == aTypeToCheckAgainst)
 				{
-					returnList.push_back(it);
+					if (theObjectToCheck->myCollider.getGlobalBounds().intersects(it->myCollider.getGlobalBounds()))
+					{
+						returnList.push_back(it);
+					}
 				}
 			}
 		}
@@ -380,11 +398,14 @@ std::vector<InstanceBase*> Game::RangeCollisionList(InstanceBase* theObjectToChe
 	{
 		for (auto it : roomList[currentRoom])
 		{
-			if (it->myIsSolid)
+			if (it != theObjectToCheck)
 			{
-				if (Math::PointDistance(theObjectToCheck->myX, theObjectToCheck->myY, it->myX, it->myY) < range)
+				if (it->myIsSolid)
 				{
-					returnList.push_back(it);
+					if (Math::PointDistance(theObjectToCheck->myX, theObjectToCheck->myY, it->myX, it->myY) < range)
+					{
+						returnList.push_back(it);
+					}
 				}
 			}
 		}
@@ -393,11 +414,14 @@ std::vector<InstanceBase*> Game::RangeCollisionList(InstanceBase* theObjectToChe
 	{
 		for (auto it : roomList[currentRoom])
 		{
-			if (it->myIsEnemy)
+			if (it != theObjectToCheck)
 			{
-				if (Math::PointDistance(theObjectToCheck->myX, theObjectToCheck->myY, it->myX, it->myY) < range)
+				if (it->myIsEnemy)
 				{
-					returnList.push_back(it);
+					if (Math::PointDistance(theObjectToCheck->myX, theObjectToCheck->myY, it->myX, it->myY) < range)
+					{
+						returnList.push_back(it);
+					}
 				}
 			}
 		}
@@ -406,11 +430,14 @@ std::vector<InstanceBase*> Game::RangeCollisionList(InstanceBase* theObjectToChe
 	{
 		for (auto it : roomList[currentRoom])
 		{
-			if (it->myType == aTypeToCheckAgainst)
+			if (it != theObjectToCheck)
 			{
-				if (Math::PointDistance(theObjectToCheck->myX, theObjectToCheck->myY, it->myX, it->myY) < range)
+				if (it->myType == aTypeToCheckAgainst)
 				{
-					returnList.push_back(it);
+					if (Math::PointDistance(theObjectToCheck->myX, theObjectToCheck->myY, it->myX, it->myY) < range)
+					{
+						returnList.push_back(it);
+					}
 				}
 			}
 		}
@@ -485,7 +512,7 @@ void Game::ChangeRoom(int newRoom)
 	}
 	else
 	{
-		std::cout << "This room does not exist!";
+		std::cout << ("The room does not exist!\n");
 	}
 }
 
@@ -507,7 +534,7 @@ void Game::InstanceChangeRoom(InstanceBase* instancePointer, int newRoom)
 	}
 	else
 	{
-		std::cout << "This room does not exist!";
+		std::cout << ("The room does not exist!\n");
 	}
 }
 #pragma endregion
@@ -518,25 +545,25 @@ InstanceBase* Game::AddInstance(enum TYPE t, std::string spriteName, float xPos,
 	switch (t)
 	{
 	case control:
-		newInstance = new Control(t, spriteName, xPos, yPos, currentRoom);
+		newInstance = new Control(t, spriteName, xPos, yPos, currentRoom, doInit);
 		break;
 	case player:
-		newInstance = new Player(t, spriteName, xPos, yPos, currentRoom);
+		newInstance = new Player(t, spriteName, xPos, yPos, currentRoom, doInit);
 		break;
 	case crate:
-		newInstance = new Crate(t, spriteName, xPos, yPos, currentRoom);
+		newInstance = new Crate(t, spriteName, xPos, yPos, currentRoom, doInit);
 		break;
 	case sword:
-		newInstance = new Sword(t, spriteName, xPos, yPos, currentRoom);
+		newInstance = new Sword(t, spriteName, xPos, yPos, currentRoom, doInit);
 		break;
 	case stalker:
-		newInstance = new Stalker(t, spriteName, xPos, yPos, currentRoom);
+		newInstance = new Stalker(t, spriteName, xPos, yPos, currentRoom, doInit);
 		break;
 	case pinetree:
-		newInstance = new PineTree(t, spriteName, xPos, yPos, currentRoom);
+		newInstance = new PineTree(t, spriteName, xPos, yPos, currentRoom, doInit);
 		break;
 	case environmentStatic:
-		newInstance = new EnvironmentStatic(t, spriteName, xPos, yPos, currentRoom);
+		newInstance = new EnvironmentStatic(t, spriteName, xPos, yPos, currentRoom, doInit);
 		break;
 	default:
 		newInstance = nullptr;
@@ -591,6 +618,7 @@ bool Game::Run()
 
 	if (roomList.size() > 0 && roomList[currentRoom].size() > 0) // Stack overflow if empty
 	{
+		#pragma region Enable/disable editor
 		if(editorActive)
 		{
 			editorActive = Editor();
@@ -616,6 +644,7 @@ bool Game::Run()
 				editorBP = false;
 			}
 		}
+		#pragma endregion
 
 		// Draw
 		window->clear(sf::Color(255, 255, 255));
@@ -624,11 +653,6 @@ bool Game::Run()
 		Draw(); // Default Draw
 		EndDraw();
 		DrawGUI();
-		sf::CircleShape circle = sf::CircleShape();
-		circle.setFillColor(sf::Color(255, 0, 0));
-		circle.setPosition((const sf::Vector2f) sf::Vector2f(Input::GetMouseGlobalX(), Input::GetMouseGlobalY()));
-		circle.setRadius(5);
-		window->draw(circle);
 		window->display();
 	}
 

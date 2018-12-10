@@ -6,7 +6,7 @@ InstanceBase::InstanceBase()
 	// Default and empty
 }
 
-InstanceBase::InstanceBase(int aType, const std::string &aSpriteName, const float &anX, const float &aY, int aRoom)
+InstanceBase::InstanceBase(int aType, const std::string &aSpriteName, const float &anX, const float &aY, int aRoom, bool doInit)
 	:
 	mySpriteName(aSpriteName),
 	myX(anX),
@@ -29,6 +29,13 @@ InstanceBase::InstanceBase(int aType, const std::string &aSpriteName, const floa
 {
 	//sf::Sprite tempSprite = SpriteLib::GetSprite(mySpriteName);
 	myCollider.setSize(sf::Vector2f(0, 0));
+
+	if (!doInit)
+	{
+		sf::Sprite tempSprite = SpriteLib::GetSprite(mySpriteName);
+		myWCentering = tempSprite.getTextureRect().width / 2;
+		myHCentering = tempSprite.getTextureRect().height / 2;
+	}
 }
 
 void InstanceBase::Init()

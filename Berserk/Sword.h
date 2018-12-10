@@ -13,5 +13,7 @@ public:
 	virtual void Init() override;
 	virtual void Update() override;
 	virtual void EndDraw(sf::RenderWindow* window) override;
+	float myDamage;
+	float mySwingThresh;
 };
 #endif

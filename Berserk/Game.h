@@ -63,7 +63,7 @@ private:
 	std::vector<int> editorPlaceableEnums;
 	std::vector<std::string> editorPlaceableSprites;
 	std::vector<InstanceBase*> editorTempUIList;
-	int convertIntToString(std::string);
+	int ConvertIntToString(std::string);
 	
 };
 #endif

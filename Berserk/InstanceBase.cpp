@@ -6,7 +6,7 @@ InstanceBase::InstanceBase()
 	// Default and empty
 }
 
-InstanceBase::InstanceBase(int aType, const std::string &aSpriteName, const float &anX, const float &aY, int aRoom)
+InstanceBase::InstanceBase(int aType, const std::string &aSpriteName, const float &anX, const float &aY, int aRoom, bool doInit)
 	:
 	mySpriteName(aSpriteName),
 	myX(anX),
@@ -19,6 +19,7 @@ InstanceBase::InstanceBase(int aType, const std::string &aSpriteName, const floa
 	myDir(0),
 	myDestroy(false),
 	myIsSolid(false),
+	myIsPersistent(false),
 	myIsEnemy(false),
 	myHScale(1),
 	myVScale(1),
@@ -28,6 +29,13 @@ InstanceBase::InstanceBase(int aType, const std::string &aSpriteName, const floa
 {
 	//sf::Sprite tempSprite = SpriteLib::GetSprite(mySpriteName);
 	myCollider.setSize(sf::Vector2f(0, 0));
+
+	if (!doInit)
+	{
+		sf::Sprite tempSprite = SpriteLib::GetSprite(mySpriteName);
+		myWCentering = tempSprite.getTextureRect().width / 2;
+		myHCentering = tempSprite.getTextureRect().height / 2;
+	}
 }
 
 void InstanceBase::Init()
@@ -53,7 +61,7 @@ void InstanceBase::BeginDraw(sf::RenderWindow* window)
 {
 }
 
-void InstanceBase::Draw(sf::RenderWindow* window)
+void InstanceBase::Draw(sf::RenderWindow* window, bool editorOpen)
 {
 	if (mySpriteName != "")
 	{
@@ -62,7 +70,16 @@ void InstanceBase::Draw(sf::RenderWindow* window)
 		sprite.setPosition(myX, myY);
 		sprite.setOrigin(myWCentering, myHCentering);
 		sprite.setRotation(myDir);
-		window->draw(myCollider);
+		//window->draw(myCollider);
+		window->draw(sprite);
+	}
+	else if (editorOpen)
+	{
+		// Draw sprite
+		sf::Sprite sprite = SpriteLib::GetSprite("unknown");
+		sprite.setPosition(myX, myY);
+		sprite.setOrigin(myWCentering, myHCentering);
+		sprite.setRotation(myDir);
 		window->draw(sprite);
 	}
 }

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef STALKER_HEADER
+#define STALKER_HEADER
 #include "EnemyBase.h"
 
 class Stalker : public EnemyBase
@@ -15,3 +16,4 @@ class Stalker : public EnemyBase
 		void Init() override;
 };
 
+#endif

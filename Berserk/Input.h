@@ -12,7 +12,7 @@ private:
 public:
 	Input();
 	~Input();
-	static enum mouseButtons {mbRight, mbLeft};
+	enum mouseButtons {mbRight, mbLeft};
 	static bool KeyDown(char aKey);
 	static int GetMouseX();
 	static int GetMouseY();

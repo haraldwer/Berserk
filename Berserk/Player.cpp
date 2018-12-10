@@ -4,10 +4,11 @@
 #include "Math.h"
 #include <cmath>
 
-
 Player::~Player()
 {
 }
+
+Player::~Player() { }
 
 void Player::Init()
 {
@@ -17,11 +18,12 @@ void Player::Init()
 	myMoveFric = 0.85f; 
 
 	mySwordDist = -50;
-	mySwordDefaultDist = mySwordDist;
+	mySwordDefaultDist = (int)mySwordDist;
 	mySwordExtendedDist = -100;
 	mySwordSwingSpd = 0.2f;
+	mySwordSwingExtSpd = 0.1f;
 	mySwordSwingMoveSpd = 0.8f;
-	mySwordExtendSpd = 0.3;
+	mySwordExtendSpd = 0.3f;
 
 	baseSprite = mySpriteName;
 	currentAnim = idle;
@@ -36,9 +38,10 @@ void Player::Init()
 	myWCentering = tempSprite.getTextureRect().width/2;
 	myHCentering = tempSprite.getTextureRect().height/2;
 	myCollider.setPosition(myX, myY);
-	myCollider.setSize(sf::Vector2f(tempSprite.getTextureRect().width, tempSprite.getTextureRect().height));
-	myCollider.setOrigin(tempSprite.getTextureRect().width / 2, tempSprite.getTextureRect().height / 2);
-	mySword = Game::AddInstance(Game::playerSword, "basicSword", myX, myY);
+	myCollider.setSize((const sf::Vector2f) sf::Vector2f(tempSprite.getTextureRect().width, tempSprite.getTextureRect().height));
+	myCollider.setOrigin(myHCentering, myWCentering);
+	mySword = dynamic_cast<Sword*>(Game::AddInstance(Game::sword, "basicSword", myX, myY, true)); // Ugly but functional
+	mySwordExtended = false;
 }
 
 void Player::Update()
@@ -68,14 +71,16 @@ void Player::Update()
 	#pragma endregion
 
 	#pragma region SwordSwing
-	if (Input::KeyDown(Input::mbLeft))
+	if (Input::KeyDown(Input::mbLeft) && mySword != nullptr)
 	{
 		myVSpd *= pow(mySwordSwingMoveSpd, Time::DeltaTime());
 		myHSpd *= pow(mySwordSwingMoveSpd, Time::DeltaTime());
 		mySwordDist += (mySwordExtendedDist - mySwordDist)*mySwordExtendSpd*Time::DeltaTime();
+		mySwordExtended = true;
 	}
 	else
 	{
+		mySwordExtended = false;
 		mySwordDist += (mySwordDefaultDist - mySwordDist)*mySwordExtendSpd*Time::DeltaTime();
 	}
 	#pragma endregion
@@ -128,9 +133,32 @@ void Player::Update()
 	myCollider.setPosition(myX, myY); // Reset collider position
 	#pragma endregion
 
-	mySword->myX = cos((mySword->myDir + 90) / (180 / Math::pi)) * mySwordDist + myX;
-	mySword->myY = sin((mySword->myDir + 90) / (180 / Math::pi)) * mySwordDist + myY;
-	mySword->myDir += Math::DirDiff(mySword->myDir, Math::RadToDir(Math::PointDirection(myX, myY, Input::GetMouseGlobalX(), Input::GetMouseGlobalY())) + 90)*mySwordSwingSpd*Time::DeltaTime();
+	if (mySword != nullptr)
+	{
+		// Might want to move this into sword in order to get proper hitcheck?
+		mySword->myX = cos((mySword->myDir + 90) / (180 / Math::pi)) * mySwordDist + myX;
+		mySword->myY = sin((mySword->myDir + 90) / (180 / Math::pi)) * mySwordDist + myY;
+		float newDir = Math::DirDiff(mySword->myDir, Math::RadToDir(Math::PointDirection(myX, myY, Input::GetMouseGlobalX(), Input::GetMouseGlobalY())) + 90);
+		if (mySwordExtended)
+		{
+			newDir *= mySwordSwingExtSpd;
+		}
+		else
+		{
+			newDir *= mySwordSwingSpd;
+		}
+		mySword->myDir += newDir*Time::DeltaTime();
+
+		// Check if sword is swung and if colliding with enemy and in that case, deal damage.
+		if (abs(newDir) >= mySword->mySwingThresh || mySwordExtended)
+		{
+			for (auto it : Game::InstanceCollisionList(dynamic_cast<InstanceBase*>(mySword), Game::EnemyBase))
+			{
+				dynamic_cast<EnemyBase*>(it)->DealDamage(mySword->myDamage);
+			}
+		}
+	}
+
 
 	#pragma region Animations
 	// Animations

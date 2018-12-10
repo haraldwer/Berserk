@@ -17,11 +17,11 @@ public:
 	virtual void EndUpdate();
 
 	virtual void BeginDraw(sf::RenderWindow* window);
-	virtual void Draw(sf::RenderWindow* window);
+	virtual void Draw(sf::RenderWindow* window, bool editorOpen);
 	virtual void EndDraw(sf::RenderWindow* window);
 	
 	InstanceBase();
-	explicit InstanceBase(int aType, const std::string &aSpriteName, const float &anX, const float &aY, int aRoom);
+	explicit InstanceBase(int aType, const std::string &aSpriteName, const float &anX, const float &aY, int aRoom, bool doInit);
 	virtual ~InstanceBase();
 
 	float
@@ -35,6 +35,7 @@ public:
 	bool
 		myDestroy,
 		myIsSolid,
+		myIsPersistent,
 		myIsEnemy;
 
 	int

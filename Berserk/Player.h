@@ -1,13 +1,14 @@
 #ifndef PLAYER_HEADER
 #define PLAYER_HEADER
 #include "EnemyBase.h"
+#include "Sword.h"
 #include "Game.h"
 class Player : public EnemyBase
 {
 	using EnemyBase::EnemyBase;
 
 	public:
-		
+		//Player();
 		~Player();
 		virtual void Init() override;
 		virtual void Update() override;
@@ -26,8 +27,10 @@ class Player : public EnemyBase
 		
 		int mySwordDefaultDist;
 		int mySwordExtendedDist;
-		InstanceBase* mySword;
+		bool mySwordExtended;
+		Sword* mySword;
 		float mySwordSwingSpd;
+		float mySwordSwingExtSpd;
 		float mySwordSwingMoveSpd;
 		float mySwordExtendSpd;
 

@@ -11,6 +11,7 @@ void Stalker::Init()
 	myHCentering = tempSprite.getTextureRect().height / 2;
 	myCollider.setPosition(myX, myY);
 	myCollider.setSize(sf::Vector2f(tempSprite.getTextureRect().width, tempSprite.getTextureRect().height));
+	myCollider.setOrigin(myHCentering, myWCentering);
 	myIsEnemy = true;
 }
 
@@ -23,6 +24,34 @@ void Stalker::Update()
 		myHSpd = cos(dir)*myMoveSpd;
 		myVSpd = sin(dir)*myMoveSpd;
 	}
+
+	#pragma region Collisions
+	// Collisions
+	// Horizontal
+	myCollider.setPosition(myX + myHSpd, myY);
+	InstanceBase* it = Game::InstanceCollision(myID, Game::crate);
+	if (it != nullptr)
+	{
+		myHSpd = 0;
+	}
+
+	// Vertical
+	myCollider.setPosition(myX, myY + myVSpd);
+	it = Game::InstanceCollision(dynamic_cast<InstanceBase*>(this), Game::crate);
+	if (it != nullptr)
+	{
+		myVSpd = 0;
+	}
+
+	// Multiple direction check
+	myCollider.setPosition(myX + myHSpd, myY + myVSpd);
+	it = Game::InstanceCollision(dynamic_cast<InstanceBase*>(this), Game::crate);
+	if (it != nullptr)
+	{
+		myHSpd = 0;
+	}
+	myCollider.setPosition(myX, myY); // Reset collider position
+	#pragma endregion
 }
 
 Stalker::Stalker()

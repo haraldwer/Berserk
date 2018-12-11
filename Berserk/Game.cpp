@@ -231,15 +231,18 @@ myfile.open(INPUT_FILENAME);
 	for (auto it : roomList[currentRoom])
 	{
 		//det här är helt meningslöst
-		enumType = it->myType;
-		tempspriteName = it->mySpriteName;
-		tempX = (int)it->myX;
-		tempY = (int)it->myY;
-		myfile << "&&" << '\n';
-	myfile << "type = " + enumType << '\n'; 
-	myfile << "sprite = " + tempspriteName << '\n';
-	myfile << "myX = " + tempX << '\n';
-	myfile << "myY = " + tempY << '\n';
+		if (it->mySaveFlag)
+		{
+			enumType = it->myType;
+			tempspriteName = it->mySpriteName;
+			tempX = (int)it->myX;
+			tempY = (int)it->myY;
+			myfile << "&&" << '\n';
+			myfile << "type = " + std::to_string(enumType) << '\n'; 
+		myfile << "sprite = " + tempspriteName << '\n';
+		myfile << "myX = " + std::to_string(tempX) << '\n';
+		myfile << "myY = " + std::to_string(tempY) << '\n';
+		}
 	//myfile << "sprite = " + tempspriteName + "\n";
 
 	}

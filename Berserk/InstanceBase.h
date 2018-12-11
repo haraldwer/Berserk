@@ -36,7 +36,8 @@ public:
 		myDestroy,
 		myIsSolid,
 		myIsPersistent,
-		myIsEnemy;
+		myIsEnemy,
+		mySaveFlag;
 
 	int
 		myWCentering,

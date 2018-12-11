@@ -1,10 +1,62 @@
-1
-crate
-crate
-231
-45
-1
-basicSword
-player
-343
-125
+&&
+pe = 
+sprite = player
+e
+
+&&
+e = 
+sprite = crate
+
+loaded
+
+&&
+
+sprite = basicSword
+
+
+&&
+ype = 
+sprite = 
+myX = 
+myY = 
+&&
+ype = 
+sprite = 
+@'
+S'
+&&
+e = 
+sprite = crate
+@'
+Ž,
+&&
+pe = 
+sprite = player
+@'
+arator
+&&
+
+sprite = basicSword
+@'
+ent/unknown.png
+&&
+vector erase iterator outside range
+sprite = pineTree
+@'
+
+&&
+ector erase iterator outside range
+sprite = grass
+@'
+studio\2017\community\vc\tools\msvc\14.15.26726\include\vector
+&&
+ector erase iterator outside range
+sprite = stone
+@'
+6
+&&
+ = 
+sprite = basicSword
+basicSword.png
+g
+Writing this to a file so harald can see.

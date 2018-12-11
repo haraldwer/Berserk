@@ -53,10 +53,9 @@ Game::Game()
 	eSelected = nullptr;
 	EditorPlaceables();
 
-	AddInstance(control, "", 0, 0);
-	LoadFile("example");
+	LoadFile("example.txt");
 	// Main loop
-	while (Run());
+	while(Run());
 }
 
 #pragma region Misc
@@ -99,12 +98,11 @@ void Game::LoadRooms()
 
 std::string Game::LoadFile(std::string INPUT_FILENAME)
 {
-	/*
-	std::ofstream myfile;
-	myfile.open("example.txt");
+	//std::ofstream myfile;
+	//myfile.open("example.txt");
 
-	myfile << "Writing this to a file so harald can see.\n";
-	myfile.close();
+	//myfile << "Writing this to a file so harald can see.\n";
+	//myfile.close();
 
 	std::string line;
 	int row = 0;
@@ -113,57 +111,24 @@ std::string Game::LoadFile(std::string INPUT_FILENAME)
 	int tempX = 0;
 	int tempY = 0;
 	std::vector<std::string> fileLines = std::vector<std::string>();
-	std::ifstream myfile1("updated.txt");
-
-	if (myfile1.is_open())
+	std::ifstream myfile1(INPUT_FILENAME);
+	if(myfile1.is_open())
 	{
 		std::cout << "its opened" << '\n';
 		while (std::getline(myfile1, line))
 		{
-
 			std::cout << line + +" " + std::to_string(row) << '\n';
-			fileLines.push_back(line); //save the current line
-
-			/*
-			if (row == 0)
-			{
-				//finns inget fint sätt att ta string till enum, antignen stor if statement eller komma ihåg vilket nummer som är vilket objekt
-				enumType = (TYPE)convertIntToString(line);
-			}
-
-			if (row == 1)
-			{
-				tempName = line;
-			}
-
-			if (row == 2)
-			{
-				tempX = convertIntToString(line);
-			}
-
-			if (row == 3)
-			{
-				tempY = convertIntToString(line);
-			}
-			row++;
-
-			if (row == 4)
-			{
-				row = 0;
-				AddInstance(enumType, tempName, tempX, tempY);
-			}
-			
+			fileLines.push_back(line);
 		}
-		myfile.close();
-
+		myfile1.close();
 	}
+	
 	std::string tempCurrentString = "";
 	std::string tempCurrentStringCopy = "";
 	int equalsPos = 1; //finds the position of the equals sign 
 	std::string stringKey = ""; //removes everything but the key part, that includes the equal sign, the space before and after said equalsign and the value
 	std::string stringValue = ""; //removes the key, the equa
-
-
+	
 
 	for (size_t i = 0; i < fileLines.size(); i++) //loop trough entire document
 	{
@@ -172,17 +137,17 @@ std::string Game::LoadFile(std::string INPUT_FILENAME)
 			// Find next index
 			int firstMarker = i;
 			int lastMarker = i+1;//index for the && marker
-			while (/*fileLines[lastMarker]*/lastMarker < (fileLines.size() - 1) && fileLines[lastMarker] != "&&") //medans vi inte är utanför vår lista och vi inte har hittat en marker för en ny instans
+			while (lastMarker < (fileLines.size() - 1) && fileLines[lastMarker] != "&&") //medans vi inte är utanför vår lista och vi inte har hittat en marker för en ny instans
 			{
 				lastMarker++; //go down until you find the a new &&
 			}
-
 
 			//Default values ??
 			TYPE type = (TYPE)0;// Load type here
 			int xPos = 0;// Load xPos
 			int yPos = 0;// Load yPos
 			std::string sprite = "";// Load sprite
+
 
 
 			for(int ii = firstMarker; ii < lastMarker; ii++) //loop trough the lines that are between the two markers
@@ -194,7 +159,7 @@ std::string Game::LoadFile(std::string INPUT_FILENAME)
 					tempCurrentStringCopy = tempCurrentString;
 					equalsPos = tempCurrentString.find_first_of("="); //finds the position of the equals sign 
 					stringKey = tempCurrentString.erase(equalsPos-1,tempCurrentString.length()); //removes everything but the key part, that includes the equal sign, the space before and after said equalsign and the value
-					stringValue = tempCurrentStringCopy.erase(0,equalsPos+1); //removes the key, the equals sign and the space before 
+					stringValue = tempCurrentStringCopy.erase(0,equalsPos+2); //removes the key, the equals sign and the space before 
 
 					if (stringKey == "type")
 					{
@@ -216,8 +181,7 @@ std::string Game::LoadFile(std::string INPUT_FILENAME)
 			}
 
 			std::cout << "vegan "  << '\n';
-			InstanceBase* p = AddInstance(type, sprite, xPos, yPos);
-			
+			InstanceBase* p = AddInstance(type, sprite, xPos, yPos, true);
 
 			for (int jj = firstMarker; jj < lastMarker; jj++) //loop trough the lines that are between the two markers
 			{
@@ -254,6 +218,36 @@ std::string Game::LoadFile(std::string INPUT_FILENAME)
 	return "";
 }
 
+
+void Game::SaveFile(std::string INPUT_FILENAME)
+{
+	int row = 0;
+	int enumType = 0;
+	std::string tempspriteName = "";
+	int tempX = 0;
+	int tempY = 0;
+	std::ofstream myfile;
+myfile.open(INPUT_FILENAME);
+	for (auto it : roomList[currentRoom])
+	{
+		//det här är helt meningslöst
+		enumType = it->myType;
+		tempspriteName = it->mySpriteName;
+		tempX = (int)it->myX;
+		tempY = (int)it->myY;
+		myfile << "&&" << '\n';
+	myfile << "type = " + enumType << '\n'; 
+	myfile << "sprite = " + tempspriteName << '\n';
+	myfile << "myX = " + tempX << '\n';
+	myfile << "myY = " + tempY << '\n';
+	//myfile << "sprite = " + tempspriteName + "\n";
+
+	}
+myfile << "Writing this to a file so harald can see.\n";
+myfile.close();
+}
+
+
 void Game::LoadSprites()
 {
 	// Load all sprites here!
@@ -267,7 +261,7 @@ void Game::LoadSprites()
 	std::cout << ("Sprites loaded\n");
 }
 
-int Game::ConvertStringToInt(std::string line)
+void Game::EditorPlaceables()
 {
 	AddEditorPlaceable(Game::control, "");
 	AddEditorPlaceable(Game::crate, "crate");
@@ -300,7 +294,7 @@ sf::Sprite Game::LoadSprite(const char* INPUT_FILENAME)
 	return sprite;
 }
 
-int Game::ConvertIntToString(std::string line)
+int Game::ConvertStringToInt(std::string line)
 {
 	int result = 0;
 	try
@@ -716,6 +710,7 @@ bool Game::Editor()
 		if (!editorBP)
 		{
 			// Save and restart game loop
+			SaveFile("example.txt");
 			editorActive = false;
 			editorBP = true;
 		}
@@ -911,6 +906,7 @@ void Game::DrawGUI()
 {
 	// Custom stuff
 }
+
 #pragma endregion
 
 Game::~Game()

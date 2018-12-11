@@ -1,5 +1,15 @@
 &&
-type = 1
+type = 3
 sprite = player
-xpos = 40
+xpos = 90
 ypos = 44
+&&
+type = 3
+sprite = sword
+xpos = 300
+ypos = 267
+&&
+type = 3
+sprite = crate
+xpos = 330
+ypos = 237

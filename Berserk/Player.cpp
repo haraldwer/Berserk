@@ -4,9 +4,7 @@
 #include "Math.h"
 #include <cmath>
 
-Player::~Player()
-{
-}
+Player::Player() { }
 
 Player::~Player() { }
 
@@ -48,6 +46,8 @@ void Player::Update()
 {
 	#pragma region Movement
 	// Movement
+
+
 	float tempH = ((int)Input::KeyDown('D') - (int)Input::KeyDown('A'))*myMoveAcc;
 	float tempV = ((int)Input::KeyDown('S') - (int)Input::KeyDown('W'))*myMoveAcc;
 	if (tempH != 0 || tempV != 0)

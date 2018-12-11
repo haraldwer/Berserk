@@ -50,6 +50,7 @@ private:
 	void Draw();
 	void EndDraw();
 	void DrawGUI();
+	void SaveFile(std::string INPUT_FILENAME);
 
 	sf::Sprite LoadSprite(const char* INPUT_FILENAME);
 	void LoadRooms();
@@ -63,8 +64,6 @@ private:
 	std::vector<int> editorPlaceableEnums;
 	std::vector<std::string> editorPlaceableSprites;
 	std::vector<InstanceBase*> editorTempUIList;
-	int ConvertIntToString(std::string);
-
 	int ConvertStringToInt(std::string);
 	
 };

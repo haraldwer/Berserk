@@ -1,341 +1,71 @@
 &&
-type = 2
-sprite = player
-myX = -26
-myY = 351
+type = 3
+sprite = crate
+xpos = 300
+ypos = 300
 &&
 type = 1
 sprite = 
-myX = -173
-myY = -66
+xpos = -326
+ypos = -58
 &&
-type = 4
-sprite = basicSword
-myX = 1
-myY = 235
-&&
-type = 2
-sprite = player
-myX = -45
-myY = 251
-&&
-type = 4
-sprite = basicSword
-myX = 14
-myY = 322
+type = 3
+sprite = crate
+xpos = -326
+ypos = 69
 &&
 type = 2
 sprite = player
-myX = -26
-myY = 351
+xpos = -326
+ypos = 197
 &&
-type = 1
-sprite = 
-myX = 157
-myY = -98
-&&
-type = 4
+type = 7
 sprite = basicSword
-myX = 1
-myY = 235
-&&
-type = 2
-sprite = 
-myX = -45
-myY = 251
-&&
-type = 4
-sprite = basicSword
-myX = 1
-myY = 235
-&&
-type = 2
-sprite = player
-myX = -45
-myY = 251
-&&
-type = 4
-sprite = basicSword
-myX = 14
-myY = 322
-&&
-type = 2
-sprite = player
-myX = -26
-myY = 351
-&&
-type = 1
-sprite = 
-myX = 131
-myY = -61
-&&
-type = 4
-sprite = basicSword
-myX = 1
-myY = 235
-&&
-type = 2
-sprite = player
-myX = -45
-myY = 251
-&&
-type = 4
-sprite = basicSword
-myX = 14
-myY = 322
-&&
-type = 2
-sprite = player
-myX = -26
-myY = 351
-&&
-type = 1
-sprite = 
-myX = 110
-myY = -113
-&&
-type = 4
-sprite = basicSword
-myX = 1
-myY = 235
-&&
-type = 2
-sprite = 
-myX = -45
-myY = 251
-&&
-type = 8
-sprite = 
-myX = -45
-myY = -98
-&&
-type = 9
-sprite = 
-myX = -244
-myY = 234
-&&
-type = 9
-sprite = 
-myX = -169
-myY = 305
-&&
-type = 4
-sprite = basicSword
-myX = 14
-myY = 322
-&&
-type = 2
-sprite = player
-myX = -26
-myY = 351
-&&
-type = 1
-sprite = 
-myX = -70
-myY = 267
-&&
-type = 4
-sprite = basicSword
-myX = 1
-myY = 235
-&&
-type = 2
-sprite = player
-myX = -45
-myY = 251
+xpos = 51
+ypos = -200
 &&
 type = 8
 sprite = pineTree
-myX = 88
-myY = 130
+xpos = -326
+ypos = 453
 &&
 type = 9
 sprite = grass
-myX = -25
-myY = 215
-&&
-type = 9
-sprite = stone
-myX = 104
-myY = -5
-&&
-type = 1
-sprite = 
-myX = -415
-myY = -240
-&&
-type = 3
-sprite = crate
-myX = -258
-myY = -166
-&&
-type = 2
-sprite = player
-myX = -415
-myY = 15
+xpos = -326
+ypos = 581
 &&
 type = 7
 sprite = basicSword
-myX = -415
-myY = 143
-&&
-type = 8
-sprite = pineTree
-myX = -415
-myY = 271
-&&
-type = 9
-sprite = grass
-myX = -415
-myY = 399
-&&
-type = 9
-sprite = stone
-myX = -415
-myY = 527
-&&
-type = 4
-sprite = basicSword
-myX = 100
-myY = 100
-&&
-type = 2
-sprite = player
-myX = 100
-myY = 100
-&&
-type = 3
-sprite = crate
-myX = 300
-myY = 300
+xpos = 328
+ypos = -201
 &&
 type = 7
 sprite = basicSword
-myX = 1000
-myY = 1000
-&&
-type = 4
-sprite = basicSword
-myX = 100
-myY = 100
-&&
-type = 2
-sprite = player
-myX = 100
-myY = 100
-&&
-type = 3
-sprite = crate
-myX = 300
-myY = 300
+xpos = 451
+ypos = -99
 &&
 type = 7
 sprite = basicSword
-myX = 1000
-myY = 1000
-&&
-type = 4
-sprite = basicSword
-myX = 100
-myY = 100
-&&
-type = 2
-sprite = player
-myX = 100
-myY = 100
-&&
-type = 3
-sprite = crate
-myX = 300
-myY = 300
+xpos = 202
+ypos = -224
 &&
 type = 7
 sprite = basicSword
-myX = 1000
-myY = 1000
-&&
-type = 4
-sprite = basicSword
-myX = 100
-myY = 100
-&&
-type = 2
-sprite = player
-myX = 100
-myY = 100
-&&
-type = 3
-sprite = crate
-myX = 300
-myY = 300
+xpos = -81
+ypos = -123
 &&
 type = 7
 sprite = basicSword
-myX = 1000
-myY = 1000
-&&
-type = 4
-sprite = basicSword
-myX = 100
-myY = 100
-&&
-type = 2
-sprite = player
-myX = 100
-myY = 100
-&&
-type = 3
-sprite = crate
-myX = 300
-myY = 300
+xpos = 363
+ypos = 120
 &&
 type = 7
 sprite = basicSword
-myX = 1000
-myY = 1000
+xpos = 199
+ypos = -105
 &&
-type = 3
-sprite = crate
-myX = 236
-myY = -210
-&&
-type = 3
-sprite = crate
-myX = -415
-myY = -112
-&&
-type = 4
+type = 7
 sprite = basicSword
-myX = 14
-myY = 322
-&&
-type = 4
-sprite = basicSword
-myX = -89
-myY = -186
-&&
-type = 4
-sprite = basicSword
-myX = 24
-myY = -155
-&&
-type = 4
-sprite = basicSword
-myX = 104
-myY = -102
-&&
-type = 4
-sprite = basicSword
-myX = -108
-myY = -88
-&&
-type = 4
-sprite = 
-myX = 215
-myY = 144
-&&
-type = 4
-sprite = basicSword
-myX = -7
-myY = 68
+xpos = -326
+ypos = 325
 Writing this to a file so harald can see.

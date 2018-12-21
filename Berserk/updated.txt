@@ -1,10 +1,5 @@
 &&
 type = 3
-sprite = player
-xpos = 90
-ypos = 44
-&&
-type = 3
 sprite = sword
 xpos = 300
 ypos = 267

@@ -1,13 +1,14 @@
+#include "Bow.h"
 #include "pch.h"
-#include "Sword.h"
 #include "Game.h"
 #include <iostream>
 
-Sword::~Sword()
+
+Bow::~Bow()
 {
 }
 
-void Sword::Init()
+void Bow::Init()
 {
 	Game::SetInstanceDepth(myID, 1);
 	sf::Sprite tempSprite = SpriteLib::GetSprite(mySpriteName);
@@ -15,20 +16,20 @@ void Sword::Init()
 	myHCentering = tempSprite.getTextureRect().height / 2;
 	myCollider.setPosition(myX, myY);
 	myCollider.setSize(sf::Vector2f(tempSprite.getTextureRect().width*0.6, tempSprite.getTextureRect().height*0.6));
-	myCollider.setOrigin(myHCentering*0.6, myWCentering*0.6);
-	myDropped = false;
+	myCollider.setOrigin(myHCentering*1, myWCentering*1);
+	dropped = false;
 	myDamage = 1;
-	mySwingThresh = 0;
 }
 
-void Sword::Update()
+void Bow::Update()
 {
+
 
 }
 
-void Sword::EndDraw(sf::RenderWindow* window)
+void Bow::EndDraw(sf::RenderWindow* window)
 {
-	if (myDropped)
+	if (dropped)
 	{
 		sf::Text text;
 		text.setString("This is a test");

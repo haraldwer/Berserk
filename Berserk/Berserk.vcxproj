@@ -132,6 +132,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Arrow.h" />
+    <ClInclude Include="Bow.h" />
     <ClInclude Include="Crate.h" />
     <ClInclude Include="EnemyBase.h" />
     <ClInclude Include="EnvironmentStatic.h" />
@@ -147,6 +149,8 @@
     <ClInclude Include="Stalker.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="Control.h" />
+    <ClCompile Include="Arrow.cpp" />
+    <ClCompile Include="Bow.cpp" />
     <ClCompile Include="Crate.cpp" />
     <ClCompile Include="EnemyBase.cpp" />
     <ClCompile Include="EnvironmentStatic.cpp" />

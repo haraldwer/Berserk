@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Player.h"
+#include "arrow.h"
 #include "Input.h"
 #include "Math.h"
 #include <cmath>
@@ -38,15 +39,16 @@ void Player::Init()
 	myCollider.setPosition(myX, myY);
 	myCollider.setSize((const sf::Vector2f) sf::Vector2f(tempSprite.getTextureRect().width, tempSprite.getTextureRect().height));
 	myCollider.setOrigin(myHCentering, myWCentering);
-	mySword = dynamic_cast<Sword*>(Game::AddInstance(Game::sword, "basicSword", myX, myY, true)); // Ugly but functional
+	mySword = dynamic_cast<Sword*>(Game::AddInstance(Game::sword, "basicSword", myX, myY, true,false)); // Ugly but functional
+	myBow = dynamic_cast<Bow*>(Game::AddInstance(Game::bow, "bow", myX, myY, true, false)); // Ugly but functional
 	mySwordExtended = false;
+	aiming = false;
 }
 
 void Player::Update()
 {
 	#pragma region Movement
 	// Movement
-
 
 	float tempH = ((int)Input::KeyDown('D') - (int)Input::KeyDown('A'))*myMoveAcc;
 	float tempV = ((int)Input::KeyDown('S') - (int)Input::KeyDown('W'))*myMoveAcc;
@@ -66,9 +68,12 @@ void Player::Update()
 	{
 		currentAnim = idle;
 	}
+
 	myVSpd *= pow(myMoveFric, Time::DeltaTime());
 	myHSpd *= pow(myMoveFric, Time::DeltaTime());
+
 	#pragma endregion
+
 
 	#pragma region SwordSwing
 	if (Input::KeyDown(Input::mbLeft) && mySword != nullptr)
@@ -133,6 +138,17 @@ void Player::Update()
 	myCollider.setPosition(myX, myY); // Reset collider position
 	#pragma endregion
 
+	#pragma region Moving Weapons
+	if (myBow != nullptr)
+	{
+		//move the bow
+		myBow->myX = cos((myBow->myDir + 90) / (180 / Math::pi)) * mySwordDist + myX;
+		myBow->myY = sin((myBow->myDir + 90) / (180 / Math::pi)) * mySwordDist + myY;
+		float newDir = Math::DirDiff(myBow->myDir, Math::RadToDir(Math::PointDirection(myX, myY, Input::GetMouseGlobalX(), Input::GetMouseGlobalY())) + 90);
+		myBow->myDir += newDir * Time::DeltaTime();
+
+	}
+
 	if (mySword != nullptr)
 	{
 		// Might want to move this into sword in order to get proper hitcheck?
@@ -154,11 +170,41 @@ void Player::Update()
 		{
 			for (auto it : Game::InstanceCollisionList(dynamic_cast<InstanceBase*>(mySword), Game::EnemyBase))
 			{
-				dynamic_cast<EnemyBase*>(it)->DealDamage(mySword->myDamage);
+				if (it->myType != Game::sword)
+				{
+					dynamic_cast<EnemyBase*>(it)->DealDamage(mySword->myDamage);
+					it->myDir *= -1;
+
+				}
+				else if (it->myType == Game::sword)
+				{
+					if(dynamic_cast<Sword*>(it)->myDropped == false) //would look derpy if it effected a dropped sword
+					{
+						it->myDir += -1.5*newDir;
+					}
+				}
 			}
 		}
 	}
+#pragma endregion
 
+	#pragma region BowControls
+	if (Input::KeyDown(Input::mbLeft))
+	{
+		aiming = true;
+		//aim
+	}
+	else if(aiming)
+	{
+		aiming = false;
+		//shoot arrow Instanc_create(x,y,arrow); 
+		//ADD ARROWS HERE
+		InstanceBase* arw = Game::AddInstance(Game::arrow, "arrow", myX, myY, true, false);
+		arw->myDir = Math::PointDirection(myX, myY, Input::GetMouseGlobalX(), Input::GetMouseGlobalY());
+		
+
+	}
+#pragma endregion
 
 	#pragma region Animations
 	// Animations

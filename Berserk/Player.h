@@ -2,6 +2,7 @@
 #define PLAYER_HEADER
 #include "EnemyBase.h"
 #include "Sword.h"
+#include "Bow.h"
 #include "Game.h"
 class Player : public EnemyBase
 {
@@ -33,6 +34,8 @@ class Player : public EnemyBase
 		float mySwordSwingExtSpd;
 		float mySwordSwingMoveSpd;
 		float mySwordExtendSpd;
+		Bow* myBow;
+		bool aiming;
 
 		// Animation stuff
 		std::string baseSprite;

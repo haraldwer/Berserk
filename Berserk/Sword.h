@@ -6,7 +6,6 @@ class Sword : public InstanceBase
 	using InstanceBase::InstanceBase;
 
 private: 
-	bool dropped;
 
 public:
 	~Sword();
@@ -15,5 +14,6 @@ public:
 	virtual void EndDraw(sf::RenderWindow* window) override;
 	float myDamage;
 	float mySwingThresh;
+	bool myDropped;
 };
 #endif

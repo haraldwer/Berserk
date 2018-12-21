@@ -19,6 +19,8 @@
 #include "Player.h"
 #include "Crate.h"
 #include "Sword.h"
+#include "Bow.h"
+#include "Arrow.h"
 #include "Stalker.h"
 #include "PineTree.h"
 #include "EnvironmentStatic.h"
@@ -44,7 +46,7 @@ Game::Game()
 
 	roomList.push_back(std::vector<InstanceBase*>()); // Adding first room
 	currentRoom = 0;
-	AddInstance(control, "", 0, 0, true);
+	AddInstance(control, "", 0, 0, true, false);
 
 	editorBP = false;
 	editorActive = false;
@@ -93,7 +95,7 @@ void Game::LoadRooms()
 		}
 	}
 
-	AddInstance(control, "", 0, 0, true);
+	AddInstance(control, "", 0, 0, true,false);
 }
 
 std::string Game::LoadFile(std::string INPUT_FILENAME)
@@ -181,7 +183,7 @@ std::string Game::LoadFile(std::string INPUT_FILENAME)
 			}
 
 			std::cout << "vegan "  << '\n';
-			InstanceBase* p = AddInstance(type, sprite, xPos, yPos, true);
+			InstanceBase* p = AddInstance(type, sprite, xPos, yPos, true, true);
 
 			for (int jj = firstMarker; jj < lastMarker; jj++) //loop trough the lines that are between the two markers
 			{
@@ -240,8 +242,8 @@ myfile.open(INPUT_FILENAME);
 			myfile << "&&" << '\n';
 			myfile << "type = " + std::to_string(enumType) << '\n'; 
 		myfile << "sprite = " + tempspriteName << '\n';
-		myfile << "myX = " + std::to_string(tempX) << '\n';
-		myfile << "myY = " + std::to_string(tempY) << '\n';
+		myfile << "xpos = " + std::to_string(tempX) << '\n';
+		myfile << "ypos = " + std::to_string(tempY) << '\n';
 		}
 	//myfile << "sprite = " + tempspriteName + "\n";
 
@@ -257,6 +259,8 @@ void Game::LoadSprites()
 	SpriteLib::AddSprite(LoadSprite("Content/player.png"), "player");
 	SpriteLib::AddSprite(LoadSprite("Content/crate.png"), "crate");
 	SpriteLib::AddSprite(LoadSprite("Content/basicSword.png"), "basicSword");
+	SpriteLib::AddSprite(LoadSprite("Content/bow.png"), "bow");
+	SpriteLib::AddSprite(LoadSprite("Content/arrow.png"), "arrow");
 	SpriteLib::AddSprite(LoadSprite("Content/unknown.png"), "unknown");
 	SpriteLib::AddSprite(LoadSprite("Content/pineTree.png"), "pineTree");
 	SpriteLib::AddSprite(LoadSprite("Content/grass.png"), "grass");
@@ -272,7 +276,7 @@ void Game::EditorPlaceables()
 	AddEditorPlaceable(Game::stalker, "basicSword");
 	AddEditorPlaceable(Game::pinetree, "pineTree");
 	AddEditorPlaceable(Game::environmentStatic, "grass");
-	AddEditorPlaceable(Game::environmentStatic, "stone");
+//	AddEditorPlaceable(Game::environmentStatic, "stone");
 }
 
 void Game::AddEditorPlaceable(int type, std::string sprite)
@@ -585,32 +589,39 @@ void Game::InstanceChangeRoom(InstanceBase* instancePointer, int newRoom)
 }
 #pragma endregion
 
-InstanceBase* Game::AddInstance(enum TYPE t, std::string spriteName, float xPos, float yPos, bool doInit)
+InstanceBase* Game::AddInstance(enum TYPE t, std::string spriteName, float xPos, float yPos, bool doInit, bool saveable)
 {
 	InstanceBase* newInstance;
 	switch (t)
 	{
 	case control:
-		newInstance = new Control(t, spriteName, xPos, yPos, currentRoom, doInit);
+		newInstance = new Control(t, spriteName, xPos, yPos, currentRoom, doInit, saveable);
 		break;
 	case player:
-		newInstance = new Player(t, spriteName, xPos, yPos, currentRoom, doInit);
+		newInstance = new Player(t, spriteName, xPos, yPos, currentRoom, doInit, saveable);
 		break;
 	case crate:
-		newInstance = new Crate(t, spriteName, xPos, yPos, currentRoom, doInit);
+		newInstance = new Crate(t, spriteName, xPos, yPos, currentRoom, doInit, saveable);
 		break;
 	case sword:
-		newInstance = new Sword(t, spriteName, xPos, yPos, currentRoom, doInit);
+		newInstance = new Sword(t, spriteName, xPos, yPos, currentRoom, doInit, saveable);
 		break;
 	case stalker:
-		newInstance = new Stalker(t, spriteName, xPos, yPos, currentRoom, doInit);
+		newInstance = new Stalker(t, spriteName, xPos, yPos, currentRoom, doInit, saveable);
 		break;
 	case pinetree:
-		newInstance = new PineTree(t, spriteName, xPos, yPos, currentRoom, doInit);
+		newInstance = new PineTree(t, spriteName, xPos, yPos, currentRoom, doInit, saveable);
 		break;
 	case environmentStatic:
-		newInstance = new EnvironmentStatic(t, spriteName, xPos, yPos, currentRoom, doInit);
+		newInstance = new EnvironmentStatic(t, spriteName, xPos, yPos, currentRoom, doInit, saveable);
 		break;
+	case bow:
+		newInstance = new Bow(t, spriteName, xPos, yPos, currentRoom, doInit, saveable);
+		break;
+	case arrow:
+		newInstance = new Arrow(t, spriteName, xPos, yPos, currentRoom, doInit, saveable);
+		break;
+
 	default:
 		newInstance = nullptr;
 		break;
@@ -726,7 +737,7 @@ bool Game::Editor()
 			// Editor has just been launched! Create stuff!
 			for (size_t i = 0; i < editorPlaceableEnums.size(); i++)
 			{
-				editorTempUIList.push_back(AddInstance((Game::TYPE)editorPlaceableEnums[i], editorPlaceableSprites[i], Game::view->getCenter().x + 64 - view->getSize().x / 2, Game::view->getCenter().y + 128 * (i + 0.5f) - view->getSize().y / 2, false));
+				editorTempUIList.push_back(AddInstance((Game::TYPE)editorPlaceableEnums[i], editorPlaceableSprites[i], Game::view->getCenter().x + 64 - view->getSize().x / 2, Game::view->getCenter().y + 128 * (i + 0.5f) - view->getSize().y / 2, false,true));
 			}
 		}
 	}
@@ -748,7 +759,7 @@ bool Game::Editor()
 						if (nearest == editorTempUIList[i])
 						{
 							//editorTempUIList.erase(editorTempUIList.begin() + i);
-							editorTempUIList[i] = AddInstance((Game::TYPE)editorTempUIList[i]->myType, editorTempUIList[i]->mySpriteName, editorTempUIList[i]->myX, editorTempUIList[i]->myY, false);
+							editorTempUIList[i] = AddInstance((Game::TYPE)editorTempUIList[i]->myType, editorTempUIList[i]->mySpriteName, editorTempUIList[i]->myX, editorTempUIList[i]->myY, false,true); //XXXXXXX FRÅGA HARALD OM DENNA!!!!!!!!!!
 							i = -1;
 							//nearest->Init();
 						}

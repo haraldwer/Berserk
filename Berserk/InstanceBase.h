@@ -21,7 +21,7 @@ public:
 	virtual void EndDraw(sf::RenderWindow* window);
 	
 	InstanceBase();
-	explicit InstanceBase(int aType, const std::string &aSpriteName, const float &anX, const float &aY, int aRoom, bool doInit);
+	explicit InstanceBase(int aType, const std::string &aSpriteName, const float &anX, const float &aY, int aRoom, bool doInit, bool saveable);
 	virtual ~InstanceBase();
 
 	float

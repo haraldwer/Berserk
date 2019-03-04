@@ -1,20 +1,25 @@
-#include "Stalker.h"
+#include "MiniBoss.h"
 #include "Game.h"
 #include "Math.h"
-#include <cmath>
 
-void Stalker::Init()
+
+//MiniBoss::MiniBoss(){}
+
+
+MiniBoss::~MiniBoss()
 {
-	myMoveSpd = 3;
+}
+
+void MiniBoss::Init()
+{
+	myHP = 15000;
 	sf::Sprite tempSprite = SpriteLib::GetSprite(mySpriteName);
 	myWCentering = tempSprite.getTextureRect().width / 2;
 	myHCentering = tempSprite.getTextureRect().height / 2;
 	myCollider.setPosition(myX, myY);
 	myCollider.setSize(sf::Vector2f(tempSprite.getTextureRect().width, tempSprite.getTextureRect().height));
 	myCollider.setOrigin(myHCentering, myWCentering);
-	myIsEnemy = true;
 
-	//Stolen variables from the player, by markus
 	mySword = dynamic_cast<Sword*>(Game::AddInstance(Game::sword, "basicSword", myX, myY, true, false)); // Ugly but functional
 	mySword->myIsEnemy = true;
 	mySword->mySwappedShow = true; //in order to show 
@@ -28,31 +33,33 @@ void Stalker::Init()
 	mySwordExtendSpd = 0.3f;
 	myAttackState = spin;
 	TESTSpin = 0;
-
-	myDefualtStateChangerTime = 1*60*60*Time::DeltaTime();
+	myMoveSpd = 3;
+	myDefualtStateChangerTime = 1 * 60 * 60 * Time::DeltaTime();
 	myStateChangerTimer = 0;
 
-	myDefaultStabTime = 3*60*Time::DeltaTime();
+	myDefaultStabTime = 3 * 60 * Time::DeltaTime();
 	mystabTimer = 0;
-	myStabExtensionTime = 2*60;
+	myStabExtensionTime = 2 * 60;
 
 	mySwordSwingChargeTimer = 5 * 60;
-	
+
+
 }
 
-void Stalker::Update()
+void MiniBoss::Update()
 {
-	if(!myDestroy)
+	if (!myDestroy)
 	{
 		InstanceBase* p = Game::FindInstance(Game::player);
 		if (p != nullptr)
 		{
 			float dir = Math::PointDirection(myX, myY, p->myX, p->myY);
+			myDir = dir; //testing this XXXXXXXXXX
 			myHSpd = cos(dir)*myMoveSpd;
 			myVSpd = sin(dir)*myMoveSpd;
 		}
 
-		#pragma region Collisions
+#pragma region Collisions
 		// Collisions
 		// Horizontal
 
@@ -80,15 +87,15 @@ void Stalker::Update()
 			myHSpd = 0;
 		}
 		myCollider.setPosition(myX, myY); // Reset collider position
-		#pragma endregion
+#pragma endregion
 
 
-		#pragma region SwordSwing
+#pragma region SwordSwingwwd
 
 		myStateChangerTimer++;
 		if (myDefualtStateChangerTime < myStateChangerTimer)
 		{
-			myAttackState = (swordAttackState)(rand() % 4);
+			myAttackState = (bossAttackState)(rand() % offblanace); //NOTE WE NEED T O KEEP OFFBALANCE AS THE LAST ONE TO USE THIS SYSTEM!!!!!!!!
 			myStateChangerTimer = 0;
 			TESTSpin = 0;
 			mystabTimer = 0;
@@ -103,7 +110,7 @@ void Stalker::Update()
 
 		if (myAttackState == spin)
 		{
-			if (TESTSpin < 360*3)
+			if (TESTSpin < 360 * 3)
 			{
 				TESTSpin += 0.6f;
 			}
@@ -111,7 +118,7 @@ void Stalker::Update()
 		else if (myAttackState == stab)
 		{
 			mystabTimer++;
-			if (myDefaultStabTime< mystabTimer ) //timer is done extend sword
+			if (myDefaultStabTime < mystabTimer) //timer is done extend sword
 			{
 				mySwordExtended = true;
 			}
@@ -144,6 +151,19 @@ void Stalker::Update()
 				mySwordSwingDir = 0;
 			}
 		}
+		else if (myAttackState == bow)
+		{
+			InstanceBase* arw = Game::AddInstance(Game::arrow, "arrow", myX, myY, true, false);
+			arw->myDir = myDir; //TESTING THIS....   //Math::PointDirection(myX, myY, Input::GetMouseGlobalX(), Input::GetMouseGlobalY());
+			arw->myIsEnemy = true;
+			myStateChangerTimer = myDefualtStateChangerTime;
+		}
+		else if (sizeUp == myAttackState)
+		{
+			myHScale *= 2;
+			myVScale *= 2;
+			myStateChangerTimer = myDefualtStateChangerTime;
+		}
 
 		if (tempdist < 340 && mySword != nullptr && myAttackState != stab)
 		{
@@ -170,13 +190,13 @@ void Stalker::Update()
 			mySwordDist += (mySwordDefaultDist - mySwordDist)*mySwordExtendSpd*Time::DeltaTime();
 		}
 
-		if (mySword != nullptr )
+		if (mySword != nullptr)
 		{
 			// Might want to move this into sword in order to get proper hitcheck?
 			mySword->myX = cos((mySword->myDir + 90) / (180 / Math::pi)) * mySwordDist + myX; //calculates the new x and y positions for the sword
 			mySword->myY = sin((mySword->myDir + 90) / (180 / Math::pi)) * mySwordDist + myY;
 			float newDir = Math::DirDiff(mySword->myDir, Math::RadToDir(Math::PointDirection(myX, myY, p->myX, p->myY)) + 90 + TESTSpin + mySwordSwingDir);
-		
+
 			if (mySwordExtended)
 			{
 				newDir *= mySwordSwingExtSpd;
@@ -190,7 +210,7 @@ void Stalker::Update()
 			// Check if sword is swung and if colliding with enemy and in that case, deal damage.
 			if (abs(newDir) >= mySword->mySwingThresh || mySwordExtended)
 			{
-				
+
 				for (auto it : Game::InstanceCollisionList(dynamic_cast<InstanceBase*>(mySword), Game::player))
 				{
 					if (it->myType == Game::player) //super mega ful lösning, men den bör fungera!
@@ -198,25 +218,14 @@ void Stalker::Update()
 						dynamic_cast<EnemyBase*>(it)->DealDamage(mySword->myDamage);
 					}
 				}
-				
+
 			}
 		}
 
 
 
-	#pragma endregion
+#pragma endregion
 
 	}
-}
 
-Stalker::Stalker()
-{
-}
-
-Stalker::~Stalker()
-{
-	if (mySword != nullptr)
-	{
-		mySword->myDropped = true;
-	}
 }

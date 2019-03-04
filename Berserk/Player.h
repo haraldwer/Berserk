@@ -16,6 +16,8 @@ class Player : public EnemyBase
 		virtual void EndUpdate() override;
 		virtual void Die();
 		virtual void DealDamage(int damage); 
+		Sword* mySword; //VÄLDIGT FULLT ATT FLYTTA UT TILL PUBLIC MEN VI HAR VALLT ATT UNDVIKA ACCESSMETODER
+		Sword* mySavedSword;
 
 	private:
 		// General stuff
@@ -29,13 +31,16 @@ class Player : public EnemyBase
 		int mySwordDefaultDist;
 		int mySwordExtendedDist;
 		bool mySwordExtended;
-		Sword* mySword;
 		float mySwordSwingSpd;
 		float mySwordSwingExtSpd;
 		float mySwordSwingMoveSpd;
 		float mySwordExtendSpd;
 		Bow* myBow;
+		Bow* mySavedBow; //ugly but functional selution thats a little cheeky
 		bool aiming;
+		bool mySwordSelectedBool;
+		bool myWeaponSwappedBool;
+		bool myEHeld;
 
 		// Animation stuff
 		std::string baseSprite;

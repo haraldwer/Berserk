@@ -10,7 +10,7 @@ class Game
 public:
 	Game();
 	~Game();
-	enum TYPE { all, control, player, crate, sword, solids, EnemyBase, stalker, pinetree, environmentStatic, bow, arrow };
+	enum TYPE { all, control, player, crate, sword, solids, EnemyBase, stalker, pinetree, environmentStatic, bow, arrow, button, bowMan, wall, miniBoss };
 	static InstanceBase* AddInstance(enum TYPE t, std::string spriteName, float xPos, float yPos, bool doInit, bool saveable);
 	//static std::vector<InstanceBase*> instanceList; // Remove this
 	static std::vector<std::vector<InstanceBase*>> roomList;

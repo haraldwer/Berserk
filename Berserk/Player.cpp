@@ -38,11 +38,17 @@ void Player::Init()
 	myHCentering = tempSprite.getTextureRect().height/2;
 	myCollider.setPosition(myX, myY);
 	myCollider.setSize((const sf::Vector2f) sf::Vector2f(tempSprite.getTextureRect().width, tempSprite.getTextureRect().height));
-	myCollider.setOrigin(myHCentering, myWCentering);
+	myCollider.setOrigin(myWCentering, myHCentering);
 	mySword = dynamic_cast<Sword*>(Game::AddInstance(Game::sword, "basicSword", myX, myY, true,false)); // Ugly but functional
+	mySavedSword = mySword;
 	myBow = dynamic_cast<Bow*>(Game::AddInstance(Game::bow, "bow", myX, myY, true, false)); // Ugly but functional
+	mySavedBow = myBow;
 	mySwordExtended = false;
 	aiming = false;
+	mySwordSelectedBool = true;
+	myWeaponSwappedBool = false;
+	myEHeld = false;
+	mySavedBow->mySwappedShow = false;
 }
 
 void Player::Update()
@@ -72,8 +78,19 @@ void Player::Update()
 	myVSpd *= pow(myMoveFric, Time::DeltaTime());
 	myHSpd *= pow(myMoveFric, Time::DeltaTime());
 
-	#pragma endregion
+	if (Input::KeyDown('F'))
+	{
+		/*
+		myX += myHSpd*3;
+		myY += myVSpd*3;
+		*/
 
+		myHSpd = (cos(mySword->myDir)*4);
+		myVSpd = (sin(mySword->myDir)*4); 
+
+	}
+
+	#pragma endregion
 
 	#pragma region SwordSwing
 	if (Input::KeyDown(Input::mbLeft) && mySword != nullptr)
@@ -90,52 +107,100 @@ void Player::Update()
 	}
 	#pragma endregion
 
+	#pragma region weaponSelect 
+	if (Input::KeyDown('E') && !myWeaponSwappedBool && myEHeld == false)
+	{
+		mySwordSelectedBool = !mySwordSelectedBool;
+		myWeaponSwappedBool = true;
+		myEHeld = true;
+	}
+	
+	if (!Input::KeyDown('E'))
+	{
+		myEHeld = false;
+	}
+
+	if (mySwordSelectedBool && myWeaponSwappedBool)
+	{
+		mySavedBow->mySwappedShow = false;
+		mySavedSword->mySwappedShow = true;
+		//sword is chosen
+		//save the current bow and unequip it
+		if (myBow != nullptr)
+		{
+			mySavedBow = myBow;
+		}
+		myBow = nullptr;
+		mySword = mySavedSword; //requip sword
+		myWeaponSwappedBool = false;
+	}
+	else if(!mySwordSelectedBool && myWeaponSwappedBool)
+	{
+		//bow is selected
+		mySavedBow->mySwappedShow = true;
+		mySavedSword->mySwappedShow = false;
+
+		if (mySword != nullptr)
+		{
+			mySavedSword = mySword; //save the current sword
+		}
+		mySword = nullptr;
+		myBow = mySavedBow;
+		myWeaponSwappedBool = false;
+	}
+
+#pragma endregion
+
 	#pragma region Collisions
 	// Collisions
 	// Horizontal
-	myCollider.setPosition(myX + myHSpd, myY);
-	InstanceBase* it = Game::InstanceCollision(myID, Game::crate);
-	if (it != nullptr)
+	int lookingfor [2] = {Game::crate, Game::wall}; //ganska stolt över denna lösningen faktiskt!
+	for (int i = sizeof(lookingfor) - 1; i >= 0; i--)
 	{
-		int sign = 1;
-		if (!signbit(myHSpd))
+		myCollider.setPosition(myX + myHSpd, myY);
+		InstanceBase* it = Game::InstanceCollision(myID, (Game::TYPE)lookingfor[i]);
+		if (it != nullptr)
 		{
-			sign = -1;
+			int sign = 1;
+			if (!signbit(myHSpd))
+			{
+				sign = -1;
+			}
+			while (myHSpd*-sign > 0 && it != nullptr)
+			{
+				myHSpd += sign;
+				myCollider.setPosition(myX + myHSpd, myY);
+				it = Game::InstanceCollision(myID, (Game::TYPE)lookingfor[i]);
+			}
 		}
-		while (myHSpd*-sign > 0 && it != nullptr)
-		{
-			myHSpd += sign;
-			myCollider.setPosition(myX + myHSpd, myY);
-			it = Game::InstanceCollision(myID, Game::crate);
-		}
-	}
 
-	// Vertical
-	myCollider.setPosition(myX, myY + myVSpd);
-	it = Game::InstanceCollision(dynamic_cast<InstanceBase*>(this), Game::crate);
-	if (it != nullptr)
-	{
-		int sign = 1;
-		if (!signbit(myVSpd))
+		// Vertical
+		myCollider.setPosition(myX, myY + myVSpd);
+		it = Game::InstanceCollision(dynamic_cast<InstanceBase*>(this), (Game::TYPE)lookingfor[i]);
+		if (it != nullptr)
 		{
-			sign = -1;
+			int sign = 1;
+			if (!signbit(myVSpd))
+			{
+				sign = -1;
+			}
+			while (myVSpd*-sign > 0 && it != nullptr)
+			{
+				myVSpd += sign;
+				myCollider.setPosition(myX, myY + myVSpd);
+				it = Game::InstanceCollision(dynamic_cast<InstanceBase*>(this), Game::crate);
+			}
 		}
-		while (myVSpd*-sign > 0 && it != nullptr)
-		{
-			myVSpd += sign;
-			myCollider.setPosition(myX, myY + myVSpd);
-			it = Game::InstanceCollision(dynamic_cast<InstanceBase*>(this), Game::crate);
-		}
-	}
 
-	// Multiple direction check
-	myCollider.setPosition(myX + myHSpd, myY + myVSpd);
-	it = Game::InstanceCollision(dynamic_cast<InstanceBase*>(this), Game::crate);
-	if (it != nullptr)
-	{
-		myHSpd = 0;
+		// Multiple direction check
+		myCollider.setPosition(myX + myHSpd, myY + myVSpd);
+		it = Game::InstanceCollision(dynamic_cast<InstanceBase*>(this), (Game::TYPE)lookingfor[i]);
+		if (it != nullptr)
+		{
+			myHSpd = 0;
+		}
+		myCollider.setPosition(myX, myY); // Reset collider position
 	}
-	myCollider.setPosition(myX, myY); // Reset collider position
 	#pragma endregion
 
 	#pragma region Moving Weapons
@@ -170,7 +235,12 @@ void Player::Update()
 		{
 			for (auto it : Game::InstanceCollisionList(dynamic_cast<InstanceBase*>(mySword), Game::EnemyBase))
 			{
-				if (it->myType != Game::sword)
+				if (it->myType == Game::miniBoss)
+				{
+					int tepm = 0;
+
+				}
+				if ((it->myType != Game::sword) && (it->myType != Game::bow) && (it->myType != Game::arrow))
 				{
 					dynamic_cast<EnemyBase*>(it)->DealDamage(mySword->myDamage);
 					it->myDir *= -1;
@@ -182,6 +252,18 @@ void Player::Update()
 					{
 						it->myDir += -1.5*newDir;
 					}
+				}
+			}
+
+			for (auto it : Game::InstanceCollisionList(dynamic_cast<InstanceBase*>(mySword), Game::miniBoss))
+			{
+				if (it->myType == Game::miniBoss)
+				{
+					dynamic_cast<EnemyBase*>(it)->DealDamage(mySword->myDamage);
+					it->myDir *= -1;
+					it->myHSpd = cos(it->myDir)*6 * abs(newDir) * 5;
+					it->myVSpd = sin(it->myDir)*6 * abs(newDir) * 5;
+
 				}
 			}
 		}
@@ -196,13 +278,14 @@ void Player::Update()
 	}
 	else if(aiming)
 	{
-		aiming = false;
-		//shoot arrow Instanc_create(x,y,arrow); 
-		//ADD ARROWS HERE
-		InstanceBase* arw = Game::AddInstance(Game::arrow, "arrow", myX, myY, true, false);
-		arw->myDir = Math::PointDirection(myX, myY, Input::GetMouseGlobalX(), Input::GetMouseGlobalY());
-		
-
+		if (myBow != nullptr)
+		{
+			aiming = false;
+			//shoot arrow Instanc_create(x,y,arrow); 
+			//ADD ARROWS HERE
+			InstanceBase* arw = Game::AddInstance(Game::arrow, "arrow", myX, myY, true, false);
+			arw->myDir = Math::PointDirection(myX, myY, Input::GetMouseGlobalX(), Input::GetMouseGlobalY());
+		}
 	}
 #pragma endregion
 
@@ -232,6 +315,26 @@ void Player::Update()
 	}
 	*/
 	#pragma endregion
+
+#pragma region WeaponPickUp
+	
+	//minecraft and chill
+	if (Input::KeyDown('Q'))
+	{
+		InstanceBase* it = Game::InstanceCollision(myID, Game::sword);
+
+		if (it!= nullptr && it != mySword)
+		{
+			if (dynamic_cast<Sword*>(it)->myDropped)
+			{
+				it->mySpriteName = "crate";
+				mySword = dynamic_cast<Sword*>(it);
+			}
+		}
+	}
+
+
+#pragma endregion
 }
 
 void Player::EndUpdate()

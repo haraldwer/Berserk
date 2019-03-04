@@ -11,9 +11,11 @@ public:
 	~Sword();
 	virtual void Init() override;
 	virtual void Update() override;
+	virtual void Draw(sf::RenderWindow* window, bool editorOpen) override; //varför överskriver inte denna???
 	virtual void EndDraw(sf::RenderWindow* window) override;
 	float myDamage;
 	float mySwingThresh;
 	bool myDropped;
+	bool mySwappedShow;
 };
 #endif

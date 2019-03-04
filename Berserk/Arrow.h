@@ -1,6 +1,6 @@
 #ifndef ARROW_HEADER
 #define ARROW_HEADER
-#include "EnemyBase.h" //Maybe should be instanceBase im unsure
+#include "InstanceBase.h" //Maybe should be instanceBase im unsure
 class Bow;
 class Arrow : public InstanceBase
 {

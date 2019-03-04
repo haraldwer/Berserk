@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "InstanceBase.h"
+#include "Game.h"
+
 
 InstanceBase::InstanceBase()
 {
@@ -27,6 +29,7 @@ InstanceBase::InstanceBase(int aType, const std::string &aSpriteName, const floa
 	myDepth(0),
 	myRoom(aRoom),
 	mySaveFlag(saveble)
+	
 {
 	//sf::Sprite tempSprite = SpriteLib::GetSprite(mySpriteName);
 	myCollider.setSize(sf::Vector2f(0, 0));
@@ -50,6 +53,7 @@ void InstanceBase::BeginUpdate()
 
 void InstanceBase::Update()
 {
+	//override this and add code for the specific object in question
 }
 
 void InstanceBase::EndUpdate()
@@ -83,6 +87,8 @@ void InstanceBase::Draw(sf::RenderWindow* window, bool editorOpen)
 		sprite.setRotation(myDir);
 		window->draw(sprite);
 	}
+
+
 }
 
 void InstanceBase::EndDraw(sf::RenderWindow* window)

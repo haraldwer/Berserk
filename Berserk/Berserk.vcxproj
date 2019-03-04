@@ -132,15 +132,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Door.cpp" />
+    <ClCompile Include="MiniBoss.cpp" />
+    <ClCompile Include="Wall.cpp" />
     <ClInclude Include="Arrow.h" />
     <ClInclude Include="Bow.h" />
+    <ClInclude Include="BowMan.h" />
+    <ClInclude Include="Button.h" />
     <ClInclude Include="Crate.h" />
+    <ClInclude Include="Door.h" />
     <ClInclude Include="EnemyBase.h" />
     <ClInclude Include="EnvironmentStatic.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="InstanceBase.h" />
     <ClInclude Include="Math.h" />
+    <ClInclude Include="MiniBoss.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PineTree.h" />
     <ClInclude Include="Sword.h" />
@@ -151,11 +158,14 @@
     <ClInclude Include="Control.h" />
     <ClCompile Include="Arrow.cpp" />
     <ClCompile Include="Bow.cpp" />
+    <ClCompile Include="BowMan.cpp" />
+    <ClCompile Include="Button.cpp" />
     <ClCompile Include="Crate.cpp" />
     <ClCompile Include="EnemyBase.cpp" />
     <ClCompile Include="EnvironmentStatic.cpp" />
     <ClCompile Include="PineTree.cpp" />
     <ClCompile Include="Player.h" />
+    <ClInclude Include="Wall.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Berserk.cpp" />

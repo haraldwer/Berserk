@@ -24,10 +24,10 @@ void Arrow::Init()
 	myWCentering = tempSprite.getTextureRect().width / 2;
 	myHCentering = tempSprite.getTextureRect().height / 2;
 	myCollider.setPosition(myX, myY);
-	myCollider.setSize(sf::Vector2f(tempSprite.getTextureRect().width*0.6, tempSprite.getTextureRect().height*0.6));
-	myCollider.setOrigin(myHCentering*0.6, myWCentering*0.6);
+	myCollider.setSize(sf::Vector2f(tempSprite.getTextureRect().width, tempSprite.getTextureRect().height));
+	myCollider.setOrigin(myHCentering, myWCentering);
 //	myDir = myBowOrigin->myDir;
-	myallowedLifeTime = 60 * 60 * 7;
+	myallowedLifeTime = 60 * 60 * 6;
 	mySpeed = 4;
 	myDamage = 2;
 }
@@ -49,11 +49,11 @@ void Arrow::Update()
 
 	for (auto it : Game::InstanceCollisionList(this,Game::EnemyBase))
 	{
-		if(it->myType != Game::sword) //det är inte ett svärd
+		if(((it->myType != Game::sword) && (it->myType != Game::bow) && (it->myType != Game::arrow) && it->myIsEnemy != myIsEnemy)) //det är inte ett svärd eller bow
 		{
 			dynamic_cast<EnemyBase*>(it)->DealDamage(myDamage);
-		}
 			myDestroy = true;
+		}
 		
 		if (it->myType == Game::sword) //det är ett svärd
 		{//som är droppat

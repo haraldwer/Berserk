@@ -24,6 +24,10 @@
 #include "Stalker.h"
 #include "PineTree.h"
 #include "EnvironmentStatic.h"
+#include "button.h"
+#include "Bowman.h"
+#include "Wall.h"
+#include "MiniBoss.h"
 
 std::vector<std::vector<InstanceBase*>> Game::roomList;
 int Game::currentRoom;
@@ -46,7 +50,6 @@ Game::Game()
 
 	roomList.push_back(std::vector<InstanceBase*>()); // Adding first room
 	currentRoom = 0;
-	AddInstance(control, "", 0, 0, true, false);
 
 	editorBP = false;
 	editorActive = false;
@@ -56,6 +59,7 @@ Game::Game()
 	EditorPlaceables();
 
 	LoadFile("example.txt");
+	AddInstance(control, "", 0, 0, true, false);
 	// Main loop
 	while(Run());
 }
@@ -70,7 +74,7 @@ void Game::InitRenderer(int h, int w)
 	view = new sf::View(window->getDefaultView());
 }
 
-#pragma region Loading
+#pragma region Loading rooms, files and sprites
 void Game::LoadRooms()
 {
 	roomList.push_back(std::vector<InstanceBase*>()); // Adding first room
@@ -265,17 +269,26 @@ void Game::LoadSprites()
 	SpriteLib::AddSprite(LoadSprite("Content/pineTree.png"), "pineTree");
 	SpriteLib::AddSprite(LoadSprite("Content/grass.png"), "grass");
 	SpriteLib::AddSprite(LoadSprite("Content/stone.png"), "stone");
+	SpriteLib::AddSprite(LoadSprite("Content/redButton.png"), "button");
+	SpriteLib::AddSprite(LoadSprite("Content/spongeButton.png"), "buttonPressed");
+	SpriteLib::AddSprite(LoadSprite("Content/angryDude.png"), "angryDude");
+	SpriteLib::AddSprite(LoadSprite("Content/blackSquare.png"), "wall");
+	SpriteLib::AddSprite(LoadSprite("Content/badMiniBossGuy.png"), "miniBoss");
 	std::cout << ("Sprites loaded\n");
 }
 
 void Game::EditorPlaceables()
 {
-	AddEditorPlaceable(Game::control, "");
+	AddEditorPlaceable(Game::bowMan, "angryDude");
+	AddEditorPlaceable(Game::button, "button");
+	AddEditorPlaceable(Game::miniBoss, "miniBoss");
 	AddEditorPlaceable(Game::crate, "crate");
+	AddEditorPlaceable(Game::wall, "wall");
 	AddEditorPlaceable(Game::player, "player");
-	AddEditorPlaceable(Game::stalker, "basicSword");
+	AddEditorPlaceable(Game::stalker, "angryDude");
 	AddEditorPlaceable(Game::pinetree, "pineTree");
 	AddEditorPlaceable(Game::environmentStatic, "grass");
+	AddEditorPlaceable(Game::control, "");
 //	AddEditorPlaceable(Game::environmentStatic, "stone");
 }
 
@@ -621,6 +634,18 @@ InstanceBase* Game::AddInstance(enum TYPE t, std::string spriteName, float xPos,
 	case arrow:
 		newInstance = new Arrow(t, spriteName, xPos, yPos, currentRoom, doInit, saveable);
 		break;
+	case button:
+		newInstance = new Button(t, spriteName, xPos, yPos, currentRoom, doInit, saveable);
+		break;
+	case bowMan:
+		newInstance = new BowMan(t, spriteName, xPos, yPos, currentRoom, doInit, saveable);
+		break;
+	case miniBoss:
+		newInstance = new MiniBoss(t, spriteName, xPos, yPos, currentRoom, doInit, saveable);
+		break;
+	case wall:
+		newInstance = new Wall(t, spriteName, xPos, yPos, currentRoom, doInit, saveable);
+		break;
 
 	default:
 		newInstance = nullptr;
@@ -737,7 +762,7 @@ bool Game::Editor()
 			// Editor has just been launched! Create stuff!
 			for (size_t i = 0; i < editorPlaceableEnums.size(); i++)
 			{
-				editorTempUIList.push_back(AddInstance((Game::TYPE)editorPlaceableEnums[i], editorPlaceableSprites[i], Game::view->getCenter().x + 64 - view->getSize().x / 2, Game::view->getCenter().y + 128 * (i + 0.5f) - view->getSize().y / 2, false,true));
+				editorTempUIList.push_back(AddInstance((Game::TYPE)editorPlaceableEnums[i], editorPlaceableSprites[i], Game::view->getCenter().x + 64 - view->getSize().x / 2, Game::view->getCenter().y + 128 * (i + 0.5f) - view->getSize().y / 2, false,false));
 			}
 		}
 	}
@@ -775,6 +800,29 @@ bool Game::Editor()
 			eSelected->myY = Input::GetMouseGlobalY() + eOffY;
 		}
 	}
+	else if(Input::KeyDown('P'))
+	{
+		int i = 45;
+		if (eSelected == nullptr)
+		{
+			InstanceBase* nearest = FindNearest(Game::all, Input::GetMouseGlobalX(), Input::GetMouseGlobalY());
+			if (nearest != nullptr)
+			{
+				//if (Math::PointDistance(Input::GetMouseGlobalX(), Input::GetMouseGlobalY(), nearest->myX, nearest->myY) < 40)
+				{
+					eSelected = nearest;
+					eSelected->myDestroy = true;
+					eSelected->mySpriteName = "";
+
+				}
+			}
+		}
+		else
+		{
+			eSelected->myX = Input::GetMouseGlobalX() + eOffX;
+			eSelected->myY = Input::GetMouseGlobalY() + eOffY;
+		}
+	} 
 	else
 	{
 		if (eSelected != nullptr)

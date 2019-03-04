@@ -6,8 +6,8 @@ class Crate : public EnemyBase
 	using EnemyBase::EnemyBase;
 
 public:
-	~Crate();
 	virtual void Init() override;
+	~Crate();
 
 private:
 
